@@ -11,14 +11,12 @@
 - Odporucane je pouzivat vyhradne ES6 syntax.
  
 ## Ulohy
-1. Prepis handleChange ako arrow function.
-2. Zapracuj pridanie polozky newItem do pola items.
-3. Zapracuj zmazanie polozky item z pola items.
-4. Vytvor samostatny modul pre komponent TodoList a nasledne ho importuj v App.js.
-5. Vytvor samostatny modul pre komponent formulara.
-6. Zapracuj do aplikacie soft delete.
-7. Zapracuj filtrovanie poloziek v liste (vsetky, aktivne, ukoncene).
-8. Vytvor dalsie komponenty, navrhni vhodnu architekturu a zapracuj do aplikacie.
-9. Na githube vytvor privatny repozitar s riesenim a pridaj pouzivatela corageo ako spolupracovnika.
-# todo-app-react-main
-# todo-app-react-main
+- [x] 1. Prepis handleChange ako arrow function.
+- [x] 2. Zapracuj pridanie polozky newItem do pola items.
+- [x] 3. Zapracuj zmazanie polozky item z pola items.
+- [x] 4. Vytvor samostatny modul pre komponent TodoList a nasledne ho importuj v App.js.
+- [x] 5. Vytvor samostatny modul pre komponent formulara.
+- [x] 6. Zapracuj do aplikacie soft delete.
+- [x] 7. Zapracuj filtrovanie poloziek v liste (vsetky, aktivne, ukoncene).
+- [x] 8. Vytvor dalsie komponenty, navrhni vhodnu architekturu a zapracuj do aplikacie.
+- [x] 9. Na githube vytvor privatny repozitar s riesenim a pridaj pouzivatela corageo ako spolupracovnika.
