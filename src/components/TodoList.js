@@ -16,14 +16,14 @@ class TodoList extends React.Component {
                   {item.text}
                   <button
                     className="delete"
-                    onClick={() => this.props.onClickDelete(item)}
+                    onClick={() => this.props.hardDelete(item)}
                   >
                     <i></i>
                     <AiOutlineClear />
                   </button>
                   <button
                     className="soft"
-                    onClick={() => this.props.onSoftDelete(item)}
+                    onClick={() => this.props.softDelete(item)}
                   >
                     <i></i>
                     <AiOutlineCheck />
@@ -36,6 +36,7 @@ class TodoList extends React.Component {
       </div>
     );
   }
+
 }
 
 export default TodoList;
