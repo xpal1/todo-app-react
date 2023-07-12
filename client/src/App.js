@@ -1,7 +1,7 @@
 import React from "react";
-import TodoApp from "./components/TodoApp";
-import TodoLoginForm from "./components/TodoLoginForm";
-import TodoRegisterForm from "./components/TodoRegisterForm";
+import TodoApp from "./screens/TodoApp";
+import TodoLoginForm from "./screens/TodoLoginForm";
+import TodoRegisterForm from "./screens/TodoRegisterForm";
 import "./components/css/style.css";
 
 class App extends React.Component {

@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import "../components/css/style.css";
+import "./css/style.css";
 
 class TodoNavbar extends React.Component {
   state = {
