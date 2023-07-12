@@ -2,10 +2,10 @@ const mongoose = require('mongoose');
 
 mongoose.connect("mongodb://127.0.0.1:27017/react-todo-app")
 .then(() => {
-    console.log("Připojení k MongoDB bylo úspěšné!");
+    console.log("Pripojenie k MongoDB bolo úspešné!");
 })
 .catch((error) => {
-    console.log("Připojení k MongoDB bylo neúspěšné:", error);
+    console.log("Pripojenie k MongoDB bolo neúspešné:", error);
 })
 
 const newSchema = new mongoose.Schema({

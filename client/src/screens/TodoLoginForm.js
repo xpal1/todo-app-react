@@ -12,8 +12,9 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import TodoNavbar from "../components/TodoNavbar";
 import axios from "axios";
+import TodoNavbar from "../components/TodoNavbar";
+import TodoRegisterForm from "./TodoRegisterForm";
 import { useNavigate } from "react-router-dom";
 
 const defaultTheme = createTheme();
@@ -25,7 +26,6 @@ class TodoLoginForm extends React.Component {
       stayLoggedIn: false,
       username: "",
       password: "",
-      authenticated: localStorage.getItem("authenticated")|| false,
     };
   }
 
@@ -44,32 +44,35 @@ class TodoLoginForm extends React.Component {
   handleSubmit = async (event) => {
     const { navigate } = this.props;
     event.preventDefault();
-  
+
     const data = new FormData(event.currentTarget);
     console.log({
       password: data.get("password"),
       username: data.get("username"),
     });
-  
+
     // resetovanie formulara
     this.setState({ username: "", password: "" });
-  
+
     try {
       const res = await axios.post("http://localhost:5000/login", {
         username: data.get("username"),
         password: data.get("password"),
       });
-  
+
       if (res.data === "exist") {
         alert("Úspešne si sa prihlásil!");
         navigate("/todos");
-  
+
+        this.props.onLogin();
+
         // ulozenie udajov do localStorage
         localStorage.setItem("username", data.get("username"));
         localStorage.setItem("password", data.get("password"));
       } else if (res.data === "notexist") {
         alert("Nie si zaregistrovaný!");
         navigate("/registracia");
+        this.setState({ error: true });
       }
     } catch (e) {
       alert("Zadal si nesprávne údaje!");
@@ -79,6 +82,10 @@ class TodoLoginForm extends React.Component {
 
   render() {
     const { stayLoggedIn, username, password } = this.state;
+
+    if (this.state.error) {
+      return <TodoRegisterForm />;
+    }
 
     return (
       <ThemeProvider theme={defaultTheme}>
