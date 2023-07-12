@@ -51,6 +51,7 @@ class TodoRegisterForm extends React.Component {
       } else if (res.data === "notexist") {
         alert("Úspešne ste sa zaregistrovali!");
         navigate("/prihlasenie");
+        this.props.onRegister();
       }
     } catch (error) {
       alert("Zadal si nesprávne údaje!");
