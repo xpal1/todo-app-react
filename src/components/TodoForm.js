@@ -41,6 +41,7 @@ class TodoForm extends React.Component {
       text: this.state.text,
       id: Date.now(),
       status: true,
+      deleted: Boolean
     };
     this.props.addTodo(newItem);
 

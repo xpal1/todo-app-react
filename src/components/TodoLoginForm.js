@@ -13,6 +13,8 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TodoNavbar from "./TodoNavbar";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const defaultTheme = createTheme();
 
@@ -23,6 +25,7 @@ class TodoLoginForm extends React.Component {
       stayLoggedIn: false,
       username: "",
       password: "",
+      authenticated: localStorage.getItem("authenticated")|| false,
     };
   }
 
@@ -38,22 +41,40 @@ class TodoLoginForm extends React.Component {
     this.setState({ password: event.target.value });
   };
 
-  handleSubmit = (event) => {
+  handleSubmit = async (event) => {
+    const { navigate } = this.props;
     event.preventDefault();
+  
     const data = new FormData(event.currentTarget);
     console.log({
-      email: data.get("email"),
       password: data.get("password"),
+      username: data.get("username"),
     });
-
-    // ulozenie udajov do localStorage, ak je checkbox "ostat prihlaseny" zaskrtnuty
-    if (this.state.stayLoggedIn) {
-      localStorage.setItem("username", this.state.username);
-      localStorage.setItem("password", this.state.password);
-    }
-
+  
     // resetovanie formulara
     this.setState({ username: "", password: "" });
+  
+    try {
+      const res = await axios.post("http://localhost:5000/login", {
+        username: data.get("username"),
+        password: data.get("password"),
+      });
+  
+      if (res.data === "exist") {
+        alert("Úspešne si sa prihlásil!");
+        navigate("/todos");
+  
+        // ulozenie udajov do localStorage
+        localStorage.setItem("username", data.get("username"));
+        localStorage.setItem("password", data.get("password"));
+      } else if (res.data === "notexist") {
+        alert("Nie si zaregistrovaný!");
+        navigate("/registracia");
+      }
+    } catch (e) {
+      alert("Zadal si nesprávne údaje!");
+      console.log(e);
+    }
   };
 
   render() {
@@ -83,13 +104,13 @@ class TodoLoginForm extends React.Component {
                 margin="normal"
                 required
                 fullWidth
-                id="email"
-                type="email"
-                label="Emailová adresa"
-                name="email"
+                id="username"
+                type="text"
+                label="Užívateľské meno"
+                name="username"
                 value={username}
                 onChange={this.handleUsernameChange}
-                autoComplete="email"
+                autoComplete="username"
                 autoFocus
               />
               <TextField
@@ -124,7 +145,10 @@ class TodoLoginForm extends React.Component {
               </Button>
               <Grid container>
                 <Grid item>
-                  <Link href="http://localhost:3000/registracia" variant="body2">
+                  <Link
+                    href="http://localhost:3000/registracia"
+                    variant="body2"
+                  >
                     {"Ešte nemáš účet? Zaregistruj sa"}
                   </Link>
                 </Grid>
@@ -137,4 +161,8 @@ class TodoLoginForm extends React.Component {
   }
 }
 
-export default TodoLoginForm;
+export default function TodoLoginFormWrapper(props) {
+  const navigate = useNavigate();
+
+  return <TodoLoginForm {...props} navigate={navigate} />;
+}

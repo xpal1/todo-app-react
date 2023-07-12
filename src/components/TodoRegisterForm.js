@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -11,6 +11,8 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TodoNavbar from "./TodoNavbar";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const defaultTheme = createTheme();
 
@@ -18,20 +20,42 @@ class TodoRegisterForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      firstName: "",
+      username: "",
       email: "",
-      password: ""
+      password: "",
     };
   }
 
-  handleSubmit = (event) => {
+  handleSubmit = async (event) => {
+    const { navigate } = this.props;
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
       email: data.get("email"),
       password: data.get("password"),
-      firstName: data.get("firstName"),
+      username: data.get("username"),
     });
+
+    // resetovanie formulara
+    this.setState({ email: "", password: "", username: "" });
+
+    try {
+      const res = await axios.post("http://localhost:5000/register", {
+        email: this.state.email,
+        password: this.state.password,
+        username: this.state.username,
+      });
+
+      if (res.data === "exist") {
+        alert("Taký užívateľ už existuje!");
+      } else if (res.data === "notexist") {
+        alert("Úspešne ste sa zaregistrovali!");
+        navigate("/todos");
+      }
+    } catch (error) {
+      alert("Zadal si nesprávne údaje!");
+      console.log(error);
+    }
   };
 
   handleInputChange = (event) => {
@@ -45,7 +69,7 @@ class TodoRegisterForm extends React.Component {
   };
 
   render() {
-    const { firstName, email, password } = this.state;
+    const { username, email, password } = this.state;
 
     return (
       <ThemeProvider theme={defaultTheme}>
@@ -64,20 +88,21 @@ class TodoRegisterForm extends React.Component {
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Registracia
+              Registrácia
             </Typography>
             <Box component="form" onSubmit={this.handleSubmit} sx={{ mt: 3 }}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <TextField
                     autoComplete="given-name"
-                    name="firstName"
+                    name="username"
                     required
+                    type="text"
                     fullWidth
-                    id="firstName"
+                    id="username"
                     label="Meno a priezvisko"
                     autoFocus
-                    value={firstName}
+                    value={username}
                     onChange={this.handleInputChange}
                   />
                 </Grid>
@@ -129,4 +154,8 @@ class TodoRegisterForm extends React.Component {
   }
 }
 
-export default TodoRegisterForm;
+export default function TodoRegisterFormWrapper(props) {
+  const navigate = useNavigate();
+
+  return <TodoRegisterForm {...props} navigate={navigate} />;
+}
