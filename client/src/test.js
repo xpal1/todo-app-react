@@ -9,7 +9,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       isAuthenticated: false,
-      isRegistered: false
+      isRegistered: false,
     };
   }
 
@@ -27,20 +27,23 @@ class App extends React.Component {
 
   handleRegister = () => {
     this.setState({ isRegistered: true });
-  }
+  };
 
   render() {
     const { isAuthenticated, isRegistered } = this.state;
 
     if (!isAuthenticated) {
-      if (isRegistered) {
-        return <TodoLoginForm onLogin={this.handleLogin} />;
-      } else {
-        return <TodoRegisterForm onRegister={this.handleRegister} />;
+          return <TodoLoginForm onLogin={this.handleLogin} />;
+         
       }
-    } else {
-      return <TodoApp />;
-    }
+      
+      else if (!isRegistered) {
+          return <TodoRegisterForm onRegister={this.handleRegister} />;
+        }
+
+      else if (isAuthenticated) {
+        return <TodoApp />;
+      }
   }
 }
 

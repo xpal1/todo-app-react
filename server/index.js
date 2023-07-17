@@ -3,7 +3,9 @@ const cors = require('cors');
 const PORT = process.env.PORT || 5000;
 const app = express();
 
-const collection = require("./mongoConnect")
+const userModel = require("./models/userModel.js");
+const todoModel = require("./models/todoModel.js");
+const mongoose = require('./config/mongoConnect.js');
 
 app.use(express.json(), cors({ origin: "*" }));
 app.use(express.urlencoded({ extended: true }));
@@ -17,7 +19,7 @@ app.post('/login', async(req, res) => {
   const{username, password} = req.body
 
   try {
-    const check = await collection.findOne({ username: username, password: password})
+    const check = await userModel.findOne({ username: username, password: password})
 
     if (check) {
       res.json("exist")
@@ -43,7 +45,7 @@ app.post('/register', async(req, res) => {
   }
 
   try {
-    const check = await collection.findOne({ email: email})
+    const check = await userModel.findOne({ email: email})
 
     if (check) {
       res.json("exist")
@@ -51,7 +53,61 @@ app.post('/register', async(req, res) => {
 
     else {
       res.json("notexist")
-      await collection.insertMany([data])
+      await userModel.insertMany([data])
+    }
+  }
+
+  catch {
+    res.json("notexist")
+  }
+})
+
+app.post('/todos', async(req, res) => {
+  const{text, deleted, userId} = req.body
+
+  const todoData = {
+    text: text,
+    deleted: deleted,
+    userId: userId
+  }
+
+  try {
+    const todoCheck = await todoModel.find( todoData )
+
+    if (todoCheck) {
+      res.json("todo-exist")
+    }
+
+    else {
+      res.json("todo-notexist")
+      await todoModel.insertMany([todoData])
+    }
+  }
+
+  catch {
+    res.json("todo-notexist")
+  }
+})
+
+app.put('/todos/:id', async(req, res) => {
+  const{text, deleted, userId} = req.body
+
+  const todoData = {
+    text: text,
+    deleted: deleted,
+    userId: userId
+  }
+
+  try {
+    const todoCheck = await todoModel.findOne({ text: text})
+
+    if (todoCheck) {
+      res.json("exist")
+    }
+
+    else {
+      res.json("notexist")
+      await todoModel.insertMany([todoData])
     }
   }
 
