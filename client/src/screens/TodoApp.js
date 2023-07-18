@@ -10,8 +10,9 @@ class TodoApp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      items: [],
       todos: [],
+      loading: true,
+      filteredTodos: [],
     };
   }
 
@@ -22,7 +23,7 @@ class TodoApp extends React.Component {
   fetchTodos = async () => {
     try {
       const response = await axios.get("http://localhost:5000/todos");
-      this.setState({ todos: response.data });
+      this.setState({ todos: response.data, loading: false });
     } catch (error) {
       console.error(error);
     }
@@ -37,6 +38,41 @@ class TodoApp extends React.Component {
     }
   };
 
+  hardDelete = async (_id) => {
+    try {
+      await axios.delete(`http://localhost:5000/todos/${_id}`);
+      this.fetchTodos();
+      alert("Todo položka bola úspešne odstránená!");
+    } catch (error) {
+      if (error.response) {
+        alert(error.response.data.message);
+      } else {
+        alert("Niečo sa nepodarilo!");
+        console.log(error);
+      }
+    }
+  };
+
+  softDelete = async (_id, updatedTodo) => {
+    try {
+      await axios.put(`http://localhost:5000/todos/${_id}`, updatedTodo);
+      this.fetchTodos();
+      alert("Todo položka bola úspešne aktualizovaná!");
+      console.log(updatedTodo);
+    } catch (error) {
+      if (error.response) {
+        alert(error.response.data.message);
+      } else {
+        alert("Niečo sa nepodarilo!");
+        console.log(error);
+      }
+    }
+  };
+
+  setFilteredTodos = (filteredTodos) => {
+    this.setState({ filteredTodos });
+  };
+
   render() {
     return (
       <div>
@@ -48,9 +84,11 @@ class TodoApp extends React.Component {
               filterActive={this.filterActive}
               filterDone={this.filterDone}
               filterAll={this.filterAll}
+              setFilteredTodos={this.setFilteredTodos}
             />
             <TodoList
-              todos={this.state.todos}
+              todos={this.state.filteredTodos}
+              fetchTodos={this.fetchTodos}
               hardDelete={this.hardDelete}
               softDelete={this.softDelete}
             />
@@ -66,84 +104,6 @@ class TodoApp extends React.Component {
       </div>
     );
   }
-
-  addTodo = (newItem) => {
-    this.setState((state) => {
-      let items = state.items;
-      items.push(newItem);
-
-      return {
-        items,
-      };
-    });
-  };
-
-  hardDelete = (item) => {
-    this.setState((state) => {
-      let items = state.items;
-      items = items.filter((i) => i.id !== item.id);
-
-      return {
-        items,
-      };
-    });
-  };
-
-  softDelete = (item) => {
-    this.setState((state) => {
-      let items = state.items;
-
-      items.map((i) => {
-        return item.id ? (item.class = "done") : (item.class = "");
-      });
-
-      return {
-        items,
-      };
-    });
-  };
-
-  filterAll = () => {
-    this.setState((state) => {
-      let items = state.items;
-
-      items.map((i) => {
-        return i.status !== true ? (i.status = true) : (i.status = true);
-      });
-
-      return {
-        items,
-      };
-    });
-  };
-
-  filterActive = () => {
-    this.setState((state) => {
-      let items = state.items;
-
-      items.map((i) => {
-        return i.class === "done" ? (i.status = false) : (i.status = true);
-      });
-
-      return {
-        items,
-      };
-    });
-  };
-
-  filterDone = () => {
-    this.setState((state) => {
-      let items = state.items;
-
-      items.map((i) => {
-        return i.class !== "done" ? (i.status = false) : (i.status = true);
-      });
-
-      return {
-        items,
-      };
-    });
-  };
 }
 
 export default TodoApp;

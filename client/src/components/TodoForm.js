@@ -6,7 +6,7 @@ class TodoForm extends React.Component {
     super(props);
     this.state = {
       text: "",
-      deleted: false,
+      completed: false,
       userId: localStorage.getItem("userId"),
     };
   }
@@ -16,13 +16,13 @@ class TodoForm extends React.Component {
     if (!this.state.text.length) {
       return;
     }
-  
+
     const newTodo = {
       text: this.state.text,
-      deleted: false,
+      completed: false,
       userId: localStorage.getItem("userId"),
     };
-  
+
     try {
       await axios.post("http://localhost:5000/todos", newTodo);
       this.props.fetchTodos();
@@ -30,7 +30,7 @@ class TodoForm extends React.Component {
       this.setState({
         text: "",
       });
-  
+
       alert("Todo položka bola úspešne pridaná!");
     } catch (error) {
       if (error.response) {
@@ -54,7 +54,7 @@ class TodoForm extends React.Component {
       <div>
         <form onSubmit={this.handleSubmit}>
           <input
-          className="todo-form-input"
+            className="todo-form-input"
             type="text"
             name="text"
             id="text"
@@ -62,8 +62,11 @@ class TodoForm extends React.Component {
             onChange={this.handleChange}
             placeholder="New todo..."
           />
-          <button type="submit" className="add-button"> Add# {this.props.length + 1} </button>{" "}
-        </form>{" "}
+          <button type="submit" className="add-button">
+            
+            Add# {this.props.length + 1}
+          </button>
+        </form>
       </div>
     );
   }

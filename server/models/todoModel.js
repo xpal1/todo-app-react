@@ -5,7 +5,7 @@ const todoSchema = new mongoose.Schema({
         unique: true,
         required: true
     },
-    deleted: {
+    completed: {
         type: Boolean,
         default: false
     },

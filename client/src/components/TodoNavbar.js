@@ -5,8 +5,8 @@ class TodoNavbar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: "",
-      isAuthenticated: false,
+      isAuthenticated: localStorage.getItem("isAuthenticated", true),
+      username: localStorage.getItem("username"),
     };
   }
 
@@ -23,27 +23,27 @@ class TodoNavbar extends React.Component {
     window.location.href = "http://localhost:3000/registracia";
   };
 
-  render() {    
+  render() {
     return (
       <div>
         <div className="navbar">
           <ul className="navbar-li">
             <li>
+              {this.state.isAuthenticated && (
+                <p className="username-navbar">Vitaj, {this.state.username}</p>
+              )}
               <button className="home-btn" onClick={this.logoutFunction}>
                 Logout
               </button>
-                  <button
-                    className="login-btn"
-                    onClick={this.redirectToLoginForm}
-                  >
-                    Login
-                  </button>
-                  <button
-                    className="login-btn"
-                    onClick={this.redirectToRegisterForm}
-                  >
-                    Register
-                  </button>
+              <button className="login-btn" onClick={this.redirectToLoginForm}>
+                Login
+              </button>
+              <button
+                className="login-btn"
+                onClick={this.redirectToRegisterForm}
+              >
+                Register
+              </button>
             </li>
           </ul>
         </div>
