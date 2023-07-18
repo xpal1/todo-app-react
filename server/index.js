@@ -2,10 +2,10 @@ const express = require('express');
 const cors = require('cors');
 const PORT = process.env.PORT || 5000;
 const app = express();
+const mongoose = require('./config/mongoConnect.js');
 
 const userModel = require("./models/userModel.js");
 const todoModel = require("./models/todoModel.js");
-const mongoose = require('./config/mongoConnect.js');
 
 app.use(express.json(), cors({ origin: "*" }));
 app.use(express.urlencoded({ extended: true }));
@@ -15,25 +15,21 @@ app.get("/", (req, res) => {
     res.json({ message: "Server funguje!" });
   });
 
-app.post('/login', async(req, res) => {
-  const{username, password} = req.body
-
-  try {
-    const check = await userModel.findOne({ username: username, password: password})
-
-    if (check) {
-      res.json("exist")
+  app.post('/login', async (req, res) => {
+    const { username, password } = req.body;
+  
+    try {
+      const check = await userModel.findOne({ username: username, password: password });
+  
+      if (check) {
+        res.json({ userId: check._id });
+      } else {
+        res.json("notexist");
+      }
+    } catch (error) {
+      res.json("error");
     }
-
-    else {
-      res.json("notexist")
-    }
-  }
-
-  catch {
-    res.json("notexist")
-  }
-})
+  });
 
 app.post('/register', async(req, res) => {
   const{email, password, username} = req.body
@@ -62,58 +58,58 @@ app.post('/register', async(req, res) => {
   }
 })
 
-app.post('/todos', async(req, res) => {
-  const{text, deleted, userId} = req.body
+app.post("/todos", async (req, res, next) => {
+  const { text, deleted, userId } = req.body;
 
-  const todoData = {
+  const data = {
     text: text,
     deleted: deleted,
     userId: userId
-  }
+  };
 
   try {
-    const todoCheck = await todoModel.find( todoData )
-
-    if (todoCheck) {
-      res.json("todo-exist")
-    }
-
-    else {
-      res.json("todo-notexist")
-      await todoModel.insertMany([todoData])
-    }
+    const todo = await todoModel.create(data);
+    res.status(201).json(todo);
+  } catch (err) {
+    next({ status: 400, message: "Nepodarilo se vytvoriť ToDo položku" });
   }
+});
 
-  catch {
-    res.json("todo-notexist")
-  }
-})
-
-app.put('/todos/:id', async(req, res) => {
-  const{text, deleted, userId} = req.body
-
-  const todoData = {
-    text: text,
-    deleted: deleted,
-    userId: userId
-  }
-
+app.get("/todos", async (req, res, next) => {
   try {
-    const todoCheck = await todoModel.findOne({ text: text})
-
-    if (todoCheck) {
-      res.json("exist")
-    }
-
-    else {
-      res.json("notexist")
-      await todoModel.insertMany([todoData])
-    }
+    const todos = await todoModel.find();
+    res.status(200).json(todos);
+  } catch (err) {
+    next({ status: 500, message: "Nepodarilo sa načítať ToDo položky" });
   }
+});
 
-  catch {
-    res.json("notexist")
+app.delete("/todos/:id", async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    await todoModel.findByIdAndDelete(id);
+    res.sendStatus(204);
+  } catch (err) {
+    next({ status: 500, message: "Nepodarilo sa odstrániť ToDo položku" });
   }
+});
+
+app.put("/todos/:id", async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const updatedTodo = req.body;
+    await todoModel.findByIdAndUpdate(id, updatedTodo);
+    res.sendStatus(204);
+  } catch (err) {
+    next({ status: 500, message: "Nepodarilo sa aktualizovať ToDo položku" });
+  }
+});
+
+app.use((err, req, res, next) => {
+  return res.status(err.status || 400).json({
+    status: err.status || 400,
+    message: err.message || "Niečo sa nepodarilo...",
+  })
 })
 
 app.listen(PORT, () => {

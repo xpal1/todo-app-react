@@ -7,7 +7,7 @@ class TodoForm extends React.Component {
     this.state = {
       text: "",
       deleted: false,
-      userId: ""
+      userId: localStorage.getItem("userId"),
     };
   }
 
@@ -16,41 +16,29 @@ class TodoForm extends React.Component {
     if (!this.state.text.length) {
       return;
     }
-
-    const newItem = {
+  
+    const newTodo = {
       text: this.state.text,
-      id: Date.now(),
-      status: true,
-      deleted: false
+      deleted: false,
+      userId: localStorage.getItem("userId"),
     };
-    this.props.addTodo(newItem);
-
-    const data = new FormData(event.currentTarget);
-    console.log({
-      text: data.get("text"),
-      deleted: data.get("deleted"),
-      userId: data.get("userId"),
-    });
-
-    this.setState({
-      text: "",
-    });
-
+  
     try {
-      const res = await axios.post("http://localhost:5000/todos", {
-        text: this.state.text,
-        deleted: this.state.deleted,
-        userId: this.state.userId,
+      await axios.post("http://localhost:5000/todos", newTodo);
+      this.props.fetchTodos();
+      console.log(newTodo);
+      this.setState({
+        text: "",
       });
-
-      if (res.data === "todo-exist") {
-        alert("ToDo položka už existuje!");
-      } else if (res.data === "todo-notexist") {
-        alert("Todo položka bola úspešne pridaná!");
-      }
+  
+      alert("Todo položka bola úspešne pridaná!");
     } catch (error) {
-      alert("Niečo sa nepodarilo!");
-      console.log(error);
+      if (error.response) {
+        alert(error.response.data.message);
+      } else {
+        alert("Niečo sa nepodarilo!");
+        console.log(error);
+      }
     }
   };
 

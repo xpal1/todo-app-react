@@ -3,6 +3,7 @@ import TodoNavbar from "../components/TodoNavbar";
 import TodoList from "../components/TodoList";
 import TodoForm from "../components/TodoForm";
 import TodoFilter from "../components/TodoFilter";
+import axios from "axios";
 import "../components/css/style.css";
 
 class TodoApp extends React.Component {
@@ -10,8 +11,31 @@ class TodoApp extends React.Component {
     super(props);
     this.state = {
       items: [],
+      todos: [],
     };
   }
+
+  componentDidMount() {
+    this.fetchTodos();
+  }
+
+  fetchTodos = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/todos");
+      this.setState({ todos: response.data });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  addTodoToList = async (newTodo) => {
+    try {
+      await axios.post("http://localhost:5000/todos", newTodo);
+      this.props.fetchTodos();
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   render() {
     return (
@@ -26,15 +50,16 @@ class TodoApp extends React.Component {
               filterAll={this.filterAll}
             />
             <TodoList
-              items={this.state.items}
+              todos={this.state.todos}
               hardDelete={this.hardDelete}
               softDelete={this.softDelete}
             />
             <TodoForm
-              addTodo={this.addTodo}
+              addTodoToList={this.addTodoToList}
+              fetchTodos={this.fetchTodos}
               valueApp={this.state.value}
               status={this.state.status}
-              length={this.state.items.length}
+              length={this.state.todos.length}
             />
           </div>
         </div>

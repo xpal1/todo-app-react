@@ -60,13 +60,14 @@ class TodoLoginForm extends React.Component {
         password: data.get("password"),
       });
 
-      if (res.data === "exist") {
+      if (res.data.userId) {
         alert("Úspešne si sa prihlásil!");
         navigate("/todos");
 
         this.props.onLogin();
 
         // ulozenie udajov do localStorage
+        localStorage.setItem("userId", res.data.userId);
         localStorage.setItem("username", data.get("username"));
         localStorage.setItem("password", data.get("password"));
       } else if (res.data === "notexist") {
