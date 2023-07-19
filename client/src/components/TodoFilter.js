@@ -2,9 +2,13 @@ import React from "react";
 import axios from "axios";
 
 class TodoFilter extends React.Component {
+
   filterAll = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/todos");
+      const { token } = this.props;
+      const response = await axios.get("http://localhost:5000/todos/", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       this.props.setFilteredTodos(response.data);
     } catch (error) {
       console.log(error);
@@ -13,8 +17,12 @@ class TodoFilter extends React.Component {
 
   filterActive = async () => {
     try {
+      const { token } = this.props;
       const response = await axios.get(
-        "http://localhost:5000/todos?completed=false"
+        "http://localhost:5000/todos?completed=false",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
       this.props.setFilteredTodos(response.data);
     } catch (error) {
@@ -24,8 +32,12 @@ class TodoFilter extends React.Component {
 
   filterDone = async () => {
     try {
+      const { token } = this.props;
       const response = await axios.get(
-        "http://localhost:5000/todos?completed=true"
+        "http://localhost:5000/todos?completed=true",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
       this.props.setFilteredTodos(response.data);
     } catch (error) {

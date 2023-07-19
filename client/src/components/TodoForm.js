@@ -4,11 +4,16 @@ import axios from "axios";
 class TodoForm extends React.Component {
   constructor(props) {
     super(props);
+    this.myRef = React.createRef();
     this.state = {
       text: "",
       completed: false,
       userId: localStorage.getItem("userId"),
     };
+  }
+
+  componentDidMount(){
+    this.myRef.current.focus();
   }
 
   handleSubmit = async (event) => {
@@ -24,9 +29,11 @@ class TodoForm extends React.Component {
     };
 
     try {
-      await axios.post("http://localhost:5000/todos", newTodo);
+      const { token } = this.props;
+      await axios.post("http://localhost:5000/todos/", newTodo, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       this.props.fetchTodos();
-      console.log(newTodo);
       this.setState({
         text: "",
       });
@@ -34,7 +41,8 @@ class TodoForm extends React.Component {
       alert("Todo položka bola úspešne pridaná!");
     } catch (error) {
       if (error.response) {
-        alert(error.response.data.message);
+        console.log(error.response.data);
+        console.log(newTodo);
       } else {
         alert("Niečo sa nepodarilo!");
         console.log(error);
@@ -57,13 +65,13 @@ class TodoForm extends React.Component {
             className="todo-form-input"
             type="text"
             name="text"
+            ref={this.myRef}
             id="text"
             value={text}
             onChange={this.handleChange}
             placeholder="New todo..."
           />
           <button type="submit" className="add-button">
-            
             Add# {this.props.length + 1}
           </button>
         </form>

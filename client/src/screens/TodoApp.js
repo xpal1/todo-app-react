@@ -22,17 +22,11 @@ class TodoApp extends React.Component {
 
   fetchTodos = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/todos");
+      const { token } = this.props;
+      const response = await axios.get("http://localhost:5000/todos/", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       this.setState({ todos: response.data, loading: false });
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  addTodoToList = async (newTodo) => {
-    try {
-      await axios.post("http://localhost:5000/todos", newTodo);
-      this.props.fetchTodos();
     } catch (error) {
       console.error(error);
     }
@@ -40,7 +34,10 @@ class TodoApp extends React.Component {
 
   hardDelete = async (_id) => {
     try {
-      await axios.delete(`http://localhost:5000/todos/${_id}`);
+      const { token } = this.props;
+      await axios.delete(`http://localhost:5000/todos/${_id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       this.fetchTodos();
       alert("Todo položka bola úspešne odstránená!");
     } catch (error) {
@@ -55,7 +52,10 @@ class TodoApp extends React.Component {
 
   softDelete = async (_id, updatedTodo) => {
     try {
-      await axios.put(`http://localhost:5000/todos/${_id}`, updatedTodo);
+      const { token } = this.props;
+      await axios.put(`http://localhost:5000/todos/${_id}`, updatedTodo, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       this.fetchTodos();
       alert("Todo položka bola úspešne aktualizovaná!");
       console.log(updatedTodo);
@@ -81,9 +81,7 @@ class TodoApp extends React.Component {
         <div className="border-box">
           <div className="button-container">
             <TodoFilter
-              filterActive={this.filterActive}
-              filterDone={this.filterDone}
-              filterAll={this.filterAll}
+              token={this.props.token}
               setFilteredTodos={this.setFilteredTodos}
             />
             <TodoList
@@ -93,7 +91,7 @@ class TodoApp extends React.Component {
               softDelete={this.softDelete}
             />
             <TodoForm
-              addTodoToList={this.addTodoToList}
+              token={this.props.token}
               fetchTodos={this.fetchTodos}
               valueApp={this.state.value}
               status={this.state.status}

@@ -35,23 +35,23 @@ class TodoRegisterForm extends React.Component {
       password: data.get("password"),
       username: data.get("username"),
     });
-
+  
     // resetovanie formulara
     this.setState({ email: "", password: "", username: "" });
-
+  
     try {
-      const res = await axios.post("http://localhost:5000/register", {
-        email: this.state.email,
-        password: this.state.password,
-        username: this.state.username,
+      const res = await axios.post("http://localhost:5000/user/register", {
+        email: data.get("email"),
+        password: data.get("password"),
+        username: data.get("username"),
       });
-
-      if (res.data === "exist") {
-        alert("Taký užívateľ už existuje!");
-      } else if (res.data === "notexist") {
+  
+      if (res.data.userObject) {
         alert("Úspešne ste sa zaregistrovali!");
         navigate("/prihlasenie");
-        this.props.onRegister();
+        this.props.onRegister(res.data.token);
+      } else if (res.data === "exist") {
+        alert("Taký užívateľ už existuje!");
       }
     } catch (error) {
       alert("Zadal si nesprávne údaje!");

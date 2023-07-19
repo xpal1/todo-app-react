@@ -1,7 +1,6 @@
 import React from "react";
 import TodoApp from "./screens/TodoApp";
 import TodoLoginForm from "./screens/TodoLoginForm";
-import TodoRegisterForm from "./screens/TodoRegisterForm";
 import "./components/css/style.css";
 
 class App extends React.Component {
@@ -9,37 +8,34 @@ class App extends React.Component {
     super(props);
     this.state = {
       isAuthenticated: false,
-      isRegistered: false
+      token: null
     };
   }
 
   componentDidMount() {
-    const isAuthenticated = localStorage.getItem("isAuthenticated");
-    if (isAuthenticated) {
-      this.setState({ isAuthenticated: true });
+    const token = localStorage.getItem("token");
+    if (token) {
+      this.setState({ isAuthenticated: true, token: token });
     }
   }
 
-  handleLogin = () => {
-    this.setState({ isAuthenticated: true });
-    localStorage.setItem("isAuthenticated", true);
+  handleLogin = (token) => {
+    this.setState({ isAuthenticated: true, token: token });
+    localStorage.setItem("token", token);
   };
 
-  handleRegister = () => {
-    this.setState({ isRegistered: true });
-  }
+  handleLogout = () => {
+    this.setState({ isAuthenticated: false, token: null });
+    localStorage.removeItem("token");
+  };
 
   render() {
-    const { isAuthenticated, isRegistered } = this.state;
+    const { isAuthenticated, token } = this.state;
 
     if (!isAuthenticated) {
-      if (isRegistered) {
-        return <TodoLoginForm onLogin={this.handleLogin} />;
-      } else {
-        return <TodoRegisterForm onRegister={this.handleRegister} />;
-      }
+      return <TodoLoginForm onLogin={this.handleLogin} />;
     } else {
-      return <TodoApp />;
+      return <TodoApp token={token} onLogout={this.handleLogout} />;
     }
   }
 }

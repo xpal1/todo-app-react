@@ -29,9 +29,7 @@ class TodoNavbar extends React.Component {
         <div className="navbar">
           <ul className="navbar-li">
             <li>
-              {this.state.isAuthenticated && (
-                <p className="username-navbar">Vitaj, {this.state.username}</p>
-              )}
+              <p className="username-navbar">{this.state.username}</p>
               <button className="home-btn" onClick={this.logoutFunction}>
                 Logout
               </button>

@@ -55,22 +55,20 @@ class TodoLoginForm extends React.Component {
     this.setState({ username: "", password: "" });
 
     try {
-      const res = await axios.post("http://localhost:5000/login", {
+      const res = await axios.post("http://localhost:5000/user/login", {
         username: data.get("username"),
         password: data.get("password"),
       });
-
+  
       if (res.data.userId) {
         alert("Úspešne si sa prihlásil!");
         navigate("/todos");
-
-        this.props.onLogin();
-
+        this.props.onLogin(res.data.token);
         // ulozenie udajov do localStorage
         localStorage.setItem("userId", res.data.userId);
         localStorage.setItem("username", data.get("username"));
         localStorage.setItem("password", data.get("password"));
-      } else if (res.data === "notexist") {
+      } else {
         alert("Nie si zaregistrovaný!");
         navigate("/registracia");
         this.setState({ error: true });
