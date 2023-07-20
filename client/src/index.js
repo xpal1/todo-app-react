@@ -5,9 +5,11 @@ import { BrowserRouter } from "react-router-dom";
 import "./index.css";
 import App from "./App";
 
-ReactDOM.render(
+function Root() {
+  return (
     <BrowserRouter>
       <App />
-    </BrowserRouter>,
-  document.getElementById("root")
-);
+    </BrowserRouter>
+  );
+}
+ReactDOM.render(<Root />, document.getElementById("root"));

@@ -1,42 +1,30 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import axios from "axios";
 
-class TodoForm extends React.Component {
-  constructor(props) {
-    super(props);
-    this.myRef = React.createRef();
-    this.state = {
-      text: "",
-      completed: false,
-      userId: localStorage.getItem("userId"),
-    };
-  }
+function TodoForm(props) {
+  const [text, setText] = useState("");
+  const userId = localStorage.getItem("userId");
+  const myRef = useRef(null);
 
-  componentDidMount(){
-    this.myRef.current.focus();
-  }
-
-  handleSubmit = async (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    if (!this.state.text.length) {
+    if (!text.length) {
       return;
     }
 
     const newTodo = {
-      text: this.state.text,
+      text: text,
       completed: false,
-      userId: localStorage.getItem("userId"),
+      userId: userId,
     };
 
     try {
-      const { token } = this.props;
+      const { token } = props;
       await axios.post("http://localhost:5000/todos/", newTodo, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      this.props.fetchTodos();
-      this.setState({
-        text: "",
-      });
+      props.fetchTodos();
+      setText("");
 
       alert("Todo položka bola úspešne pridaná!");
     } catch (error) {
@@ -50,34 +38,29 @@ class TodoForm extends React.Component {
     }
   };
 
-  handleChange = (event) => {
-    this.setState({
-      text: event.target.value,
-    });
+  const handleChange = (event) => {
+    setText(event.target.value);
   };
 
-  render() {
-    const { text } = this.state;
-    return (
-      <div>
-        <form onSubmit={this.handleSubmit}>
-          <input
-            className="todo-form-input"
-            type="text"
-            name="text"
-            ref={this.myRef}
-            id="text"
-            value={text}
-            onChange={this.handleChange}
-            placeholder="New todo..."
-          />
-          <button type="submit" className="add-button">
-            Add# {this.props.length + 1}
-          </button>
-        </form>
-      </div>
-    );
-  }
+  return (
+    <div>
+      <form onSubmit={handleSubmit}>
+        <input
+          className="todo-form-input"
+          type="text"
+          name="text"
+          ref={myRef}
+          id="text"
+          value={text}
+          onChange={handleChange}
+          placeholder="New todo..."
+        />
+        <button type="submit" className="add-button">
+          Add# {props.length + 1}
+        </button>
+      </form>
+    </div>
+  );
 }
 
 export default TodoForm;

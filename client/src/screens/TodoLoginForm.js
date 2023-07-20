@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -19,30 +19,27 @@ import { useNavigate } from "react-router-dom";
 
 const defaultTheme = createTheme();
 
-class TodoLoginForm extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      stayLoggedIn: false,
-      username: "",
-      password: "",
-    };
-  }
+function TodoLoginForm(props) {
 
-  handleStayLoggedInChange = (event) => {
-    this.setState({ stayLoggedIn: event.target.checked });
+  const [stayLoggedIn, setStayLoggedIn] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(false);
+
+  const handleStayLoggedInChange = (event) => {
+    setStayLoggedIn(event.target.checked);
   };
 
-  handleUsernameChange = (event) => {
-    this.setState({ username: event.target.value });
+  const handleUsernameChange = (event) => {
+    setUsername(event.target.value);
   };
 
-  handlePasswordChange = (event) => {
-    this.setState({ password: event.target.value });
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
   };
 
-  handleSubmit = async (event) => {
-    const { navigate } = this.props;
+  const handleSubmit = async (event) => {
+    const { navigate } = props;
     event.preventDefault();
 
     const data = new FormData(event.currentTarget);
@@ -52,7 +49,8 @@ class TodoLoginForm extends React.Component {
     });
 
     // resetovanie formulara
-    this.setState({ username: "", password: "" });
+    setUsername("");
+    setPassword("");
 
     try {
       const res = await axios.post("http://localhost:5000/user/login", {
@@ -63,7 +61,7 @@ class TodoLoginForm extends React.Component {
       if (res.data.userId) {
         alert("Úspešne si sa prihlásil!");
         navigate("/todos");
-        this.props.onLogin(res.data.token);
+        props.onLogin(res.data.token);
         // ulozenie udajov do localStorage
         localStorage.setItem("userId", res.data.userId);
         localStorage.setItem("username", data.get("username"));
@@ -71,7 +69,7 @@ class TodoLoginForm extends React.Component {
       } else {
         alert("Nie si zaregistrovaný!");
         navigate("/registracia");
-        this.setState({ error: true });
+        setError(true);
       }
     } catch (e) {
       alert("Zadal si nesprávne údaje!");
@@ -79,10 +77,7 @@ class TodoLoginForm extends React.Component {
     }
   };
 
-  render() {
-    const { stayLoggedIn, username, password } = this.state;
-
-    if (this.state.error) {
+    if (error) {
       return <TodoRegisterForm />;
     }
 
@@ -105,7 +100,7 @@ class TodoLoginForm extends React.Component {
             <Typography component="h1" variant="h5">
               Prihlásenie
             </Typography>
-            <Box component="form" onSubmit={this.handleSubmit} sx={{ mt: 1 }}>
+            <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
                 required
@@ -115,7 +110,7 @@ class TodoLoginForm extends React.Component {
                 label="Užívateľské meno"
                 name="username"
                 value={username}
-                onChange={this.handleUsernameChange}
+                onChange={handleUsernameChange}
                 autoComplete="username"
                 autoFocus
               />
@@ -124,7 +119,7 @@ class TodoLoginForm extends React.Component {
                 required
                 fullWidth
                 name="password"
-                onChange={this.handlePasswordChange}
+                onChange={handlePasswordChange}
                 label="Heslo"
                 value={password}
                 type="password"
@@ -135,7 +130,7 @@ class TodoLoginForm extends React.Component {
                 control={
                   <Checkbox
                     checked={stayLoggedIn}
-                    onChange={this.handleStayLoggedInChange}
+                    onChange={handleStayLoggedInChange}
                     color="primary"
                   />
                 }
@@ -165,7 +160,6 @@ class TodoLoginForm extends React.Component {
       </ThemeProvider>
     );
   }
-}
 
 export default function TodoLoginFormWrapper(props) {
   const navigate = useNavigate();

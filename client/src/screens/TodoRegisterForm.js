@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -16,18 +16,13 @@ import { useNavigate } from "react-router-dom";
 
 const defaultTheme = createTheme();
 
-class TodoRegisterForm extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      username: "",
-      email: "",
-      password: "",
-    };
-  }
+function TodoRegisterForm(props) {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  handleSubmit = async (event) => {
-    const { navigate } = this.props;
+  const handleSubmit = async (event) => {
+    const { navigate } = props;
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
@@ -35,21 +30,23 @@ class TodoRegisterForm extends React.Component {
       password: data.get("password"),
       username: data.get("username"),
     });
-  
+
     // resetovanie formulara
-    this.setState({ email: "", password: "", username: "" });
-  
+    setEmail("");
+    setPassword("");
+    setUsername("");
+
     try {
       const res = await axios.post("http://localhost:5000/user/register", {
         email: data.get("email"),
         password: data.get("password"),
         username: data.get("username"),
       });
-  
+
       if (res.data.userObject) {
         alert("Úspešne ste sa zaregistrovali!");
         navigate("/prihlasenie");
-        this.props.onRegister(res.data.token);
+        props.onRegister(res.data.token);
       } else if (res.data === "exist") {
         alert("Taký užívateľ už existuje!");
       }
@@ -59,100 +56,98 @@ class TodoRegisterForm extends React.Component {
     }
   };
 
-  handleInputChange = (event) => {
-    const target = event.target;
-    const name = target.name;
-    const value = target.value;
-
-    this.setState({
-      [name]: value,
-    });
+  const handleUsernameChange = (event) => {
+    setUsername(event.target.value);
   };
 
-  render() {
-    const { username, email, password } = this.state;
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value);
+  };
 
-    return (
-      <ThemeProvider theme={defaultTheme}>
-        <TodoNavbar />
-        <Container component="main" maxWidth="xs">
-          <CssBaseline />
-          <Box
-            sx={{
-              marginTop: 8,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
-              <LockOutlinedIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5">
-              Registrácia
-            </Typography>
-            <Box component="form" onSubmit={this.handleSubmit} sx={{ mt: 3 }}>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <TextField
-                    autoComplete="given-name"
-                    name="username"
-                    required
-                    type="text"
-                    fullWidth
-                    id="username"
-                    label="Meno a priezvisko"
-                    autoFocus
-                    value={username}
-                    onChange={this.handleInputChange}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    required
-                    fullWidth
-                    id="email"
-                    type="email"
-                    label="Emailová adresa"
-                    name="email"
-                    autoComplete="email"
-                    value={email}
-                    onChange={this.handleInputChange}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    required
-                    fullWidth
-                    name="password"
-                    label="Heslo"
-                    type="password"
-                    id="password"
-                    autoComplete="new-password"
-                    value={password}
-                    onChange={this.handleInputChange}
-                  />
-                </Grid>
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
+  };
+
+  return (
+    <ThemeProvider theme={defaultTheme}>
+      <TodoNavbar />
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 8,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Registrácia
+          </Typography>
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  autoComplete="given-name"
+                  name="username"
+                  required
+                  type="text"
+                  fullWidth
+                  id="username"
+                  label="Meno a priezvisko"
+                  autoFocus
+                  value={username}
+                  onChange={handleUsernameChange}
+                />
               </Grid>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                Registrovať sa
-              </Button>
-              <Grid item>
-                <Link href="http://localhost:3000/prihlasenie" variant="body2">
-                  Už máš účet? Prihlás sa
-                </Link>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="email"
+                  type="email"
+                  label="Emailová adresa"
+                  name="email"
+                  autoComplete="email"
+                  value={email}
+                  onChange={handleEmailChange}
+                />
               </Grid>
-            </Box>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="password"
+                  label="Heslo"
+                  type="password"
+                  id="password"
+                  autoComplete="new-password"
+                  value={password}
+                  onChange={handlePasswordChange}
+                />
+              </Grid>
+            </Grid>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Registrovať sa
+            </Button>
+            <Grid item>
+              <Link href="http://localhost:3000/prihlasenie" variant="body2">
+                Už máš účet? Prihlás sa
+              </Link>
+            </Grid>
           </Box>
-        </Container>
-      </ThemeProvider>
-    );
-  }
+        </Box>
+      </Container>
+    </ThemeProvider>
+  );
 }
 
 export default function TodoRegisterFormWrapper(props) {
