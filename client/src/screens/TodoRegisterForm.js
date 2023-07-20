@@ -49,10 +49,12 @@ function TodoRegisterForm(props) {
         props.onRegister(res.data.token);
       } else if (res.data === "exist") {
         alert("Taký užívateľ už existuje!");
+        props.onRegisterError();
       }
     } catch (error) {
-      alert("Zadal si nesprávne údaje!");
-      console.log(error);
+      alert("Už ste zaregistrovaní, choďte sa prihlásiť!");
+      props.onRegisterError();
+      // console.log(error);
     }
   };
 
@@ -84,8 +86,8 @@ function TodoRegisterForm(props) {
           <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography component="h1" variant="h5">
-            Registrácia
+          <Typography sx={{ textAlign: "center" }} component="h1" variant="h6">
+            Zaregistrujte sa, ak chcete pokračovať
           </Typography>
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
@@ -140,7 +142,7 @@ function TodoRegisterForm(props) {
             </Button>
             <Grid item>
               <Link href="http://localhost:3000/prihlasenie" variant="body2">
-                Už máš účet? Prihlás sa
+                Už máte účet? Prihláste sa
               </Link>
             </Grid>
           </Box>

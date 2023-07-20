@@ -12,14 +12,15 @@ router.post('/register', async (req, res) => {
   const { email, password, username } = req.body;
 
   try {
-    const check = await userModel.findOne({ email: email });
+    const checkEmail = await userModel.findOne({ email: email });
+    const checkUsername = await userModel.findOne({ username: username });
 
-    if (check) {
-      res.json('exist');
+    if (checkEmail || checkUsername) {
+      res.status(409).json("exist");
     } else {
       bcrypt.hash(password, saltRounds, async (err, hash) => {
         if (err) {
-          res.json('error');
+          res.status(500).json("error");
         } else {
           const data = {
             email: email,
@@ -33,7 +34,7 @@ router.post('/register', async (req, res) => {
             { user_id: user._id },
             process.env.TOKEN_SECRET,
             {
-              expiresIn: '24h',
+              expiresIn: "24h",
             }
           );
 

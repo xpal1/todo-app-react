@@ -14,7 +14,6 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
 import TodoNavbar from "../components/TodoNavbar";
-import TodoRegisterForm from "./TodoRegisterForm";
 import { useNavigate } from "react-router-dom";
 
 const defaultTheme = createTheme();
@@ -24,7 +23,6 @@ function TodoLoginForm(props) {
   const [stayLoggedIn, setStayLoggedIn] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(false);
 
   const handleStayLoggedInChange = (event) => {
     setStayLoggedIn(event.target.checked);
@@ -53,33 +51,29 @@ function TodoLoginForm(props) {
     setPassword("");
 
     try {
-      const res = await axios.post("http://localhost:5000/user/login", {
+      const { token } = props;
+      const response = await axios.post("http://localhost:5000/user/login", {
+        headers: { Authorization: `Bearer ${token}` },
         username: data.get("username"),
         password: data.get("password"),
       });
-  
-      if (res.data.userId) {
-        alert("Úspešne si sa prihlásil!");
+
+      if (response.data.userId) {
+        alert("Úspešne ste sa prihlásili!");
         navigate("/todos");
-        props.onLogin(res.data.token);
+        props.onLogin(response.data.token);
         // ulozenie udajov do localStorage
-        localStorage.setItem("userId", res.data.userId);
+        localStorage.setItem("userId", response.data.userId);
         localStorage.setItem("username", data.get("username"));
         localStorage.setItem("password", data.get("password"));
-      } else {
-        alert("Nie si zaregistrovaný!");
-        navigate("/registracia");
-        setError(true);
       }
     } catch (e) {
-      alert("Zadal si nesprávne údaje!");
-      console.log(e);
+      alert("Zadali ste nesprávne údaje!");
+      navigate("/registracia");
+      props.onLoginError();
+      // console.log(e);
     }
   };
-
-    if (error) {
-      return <TodoRegisterForm />;
-    }
 
     return (
       <ThemeProvider theme={defaultTheme}>
@@ -97,8 +91,8 @@ function TodoLoginForm(props) {
             <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
               <LockOutlinedIcon />
             </Avatar>
-            <Typography component="h1" variant="h5">
-              Prihlásenie
+            <Typography sx={{ textAlign: "center" }} component="h1" variant="h6">
+              Prihláste sa, ak chcete pokračovať...
             </Typography>
             <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
               <TextField
@@ -150,7 +144,7 @@ function TodoLoginForm(props) {
                     href="http://localhost:3000/registracia"
                     variant="body2"
                   >
-                    {"Ešte nemáš účet? Zaregistruj sa"}
+                    {"Ešte nemáte účet? Zaregistrujte sa"}
                   </Link>
                 </Grid>
               </Grid>
