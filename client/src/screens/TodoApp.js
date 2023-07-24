@@ -72,7 +72,7 @@ function TodoApp(props) {
   return (
     <div>
       <TodoNavbar />
-      <h3 className="animate-character"> ToDo 's</h3>
+      <h3 className="animate-character h3-nadpis"> ToDo 's</h3>
       <div className="border-box">
         <div className="button-container">
           <TodoFilter token={props.token} setFilteredTodos={setFilteredTodos} />
