@@ -1,56 +1,56 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import TodoApp from "./screens/TodoApp";
 import TodoLoginForm from "./screens/TodoLoginForm";
 import TodoRegisterForm from "./screens/TodoRegisterForm";
+import {
+  selectUser,
+  setToken,
+  setLoginError,
+  setRegisterError,
+} from "./redux/slices/userSlice.js";
 import "./components/css/style.css";
 
 function App(props) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [token, setToken] = useState(null);
-  const [loginError, setLoginError] = useState(false);
-  const [registerError, setRegisterError] = useState(false);
+  const dispatch = useDispatch();
+  const user = useSelector(selectUser);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      setIsAuthenticated(true);
-      setToken(token);
+      dispatch(setToken(token));
     }
   }, []);
 
   const handleLogin = (token) => {
-    setIsAuthenticated(true);
-    setToken(token);
+    dispatch(setToken(token));
     localStorage.setItem("token", token);
   };
 
   const handleLoginError = () => {
-    setIsAuthenticated(false);
-    setToken(null);
-    setLoginError(true);
+    dispatch(setLoginError(true));
   };
 
   const handleRegisterError = () => {
-    setIsAuthenticated(false);
-    setToken(null);
-    setRegisterError(true);
+    dispatch(setRegisterError(true));
   };
 
   const handleLogout = () => {
-    setIsAuthenticated(false);
-    setToken(null);
+    dispatch(setToken(null));
     localStorage.removeItem("token");
   };
 
-  if (!isAuthenticated && !loginError) {
-    return <TodoLoginForm token={token} onLogin={handleLogin} onLoginError={handleLoginError} />;
-  } else if (!isAuthenticated && loginError) {
-    return <TodoRegisterForm onRegisterError={handleRegisterError} />;
-  } else if (!isAuthenticated && registerError) {
-    return <TodoLoginForm token={token} onLogin={handleLogin} onLoginError={handleLoginError} />;
-  } else {
-    return <TodoApp token={token} onLogout={handleLogout} />;
-  }
+  return (
+    <>
+      {!user.token && (!user.loginError || user.registerError) ? (
+        <TodoLoginForm onLogin={handleLogin} onLoginError={handleLoginError} />
+      ) : !user.token && user.loginError ? (
+        <TodoRegisterForm onRegisterError={handleRegisterError} />
+      ) : (
+        <TodoApp token={user.token} onLogout={handleLogout} />
+      )}
+    </>
+  );
 }
 
 export default App;

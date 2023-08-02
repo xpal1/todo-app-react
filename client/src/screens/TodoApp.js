@@ -8,7 +8,6 @@ import "../components/css/style.css";
 
 function TodoApp(props) {
   const [todos, setTodos] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [filteredTodos, setFilteredTodos] = useState([]);
 
   const fetchTodos = async () => {
@@ -18,7 +17,6 @@ function TodoApp(props) {
         headers: { Authorization: `Bearer ${token}` },
       });
       setTodos(response.data);
-      setLoading(false);
     } catch (error) {
       console.error(error);
     }

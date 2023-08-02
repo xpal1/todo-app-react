@@ -11,19 +11,23 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TodoNavbar from "../components/TodoNavbar";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { registerUser } from "../redux/slices/userSlice.js";
 
 const defaultTheme = createTheme();
 
 function TodoRegisterForm(props) {
+
+  const dispatch = useDispatch();
+
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = async (event) => {
-    const { navigate } = props;
     event.preventDefault();
+
     const data = new FormData(event.currentTarget);
     console.log({
       email: data.get("email"),
@@ -36,26 +40,7 @@ function TodoRegisterForm(props) {
     setPassword("");
     setUsername("");
 
-    try {
-      const res = await axios.post("http://localhost:5000/user/register", {
-        email: data.get("email"),
-        password: data.get("password"),
-        username: data.get("username"),
-      });
-
-      if (res.data.userObject) {
-        alert("Úspešne ste sa zaregistrovali!");
-        navigate("/prihlasenie");
-        props.onRegister(res.data.token);
-      } else if (res.data === "exist") {
-        alert("Taký užívateľ už existuje!");
-        props.onRegisterError();
-      }
-    } catch (error) {
-      alert("Už ste zaregistrovaní, choďte sa prihlásiť!");
-      props.onRegisterError();
-      // console.log(error);
-    }
+    dispatch(registerUser(username, email, password));
   };
 
   const handleUsernameChange = (event) => {

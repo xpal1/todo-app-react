@@ -12,13 +12,16 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import axios from "axios";
 import TodoNavbar from "../components/TodoNavbar";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { loginUser } from "../redux/slices/userSlice.js";
 
 const defaultTheme = createTheme();
 
 function TodoLoginForm(props) {
+
+  const dispatch = useDispatch();
 
   const [stayLoggedIn, setStayLoggedIn] = useState(false);
   const [username, setUsername] = useState("");
@@ -37,7 +40,6 @@ function TodoLoginForm(props) {
   };
 
   const handleSubmit = async (event) => {
-    const { navigate } = props;
     event.preventDefault();
 
     const data = new FormData(event.currentTarget);
@@ -50,29 +52,7 @@ function TodoLoginForm(props) {
     setUsername("");
     setPassword("");
 
-    try {
-      const { token } = props;
-      const response = await axios.post("http://localhost:5000/user/login", {
-        headers: { Authorization: `Bearer ${token}` },
-        username: data.get("username"),
-        password: data.get("password"),
-      });
-
-      if (response.data.userId) {
-        alert("Úspešne ste sa prihlásili!");
-        navigate("/todos");
-        props.onLogin(response.data.token);
-        // ulozenie udajov do localStorage
-        localStorage.setItem("userId", response.data.userId);
-        localStorage.setItem("username", data.get("username"));
-        localStorage.setItem("password", data.get("password"));
-      }
-    } catch (e) {
-      alert("Zadali ste nesprávne údaje!");
-      navigate("/registracia");
-      props.onLoginError();
-      // console.log(e);
-    }
+    dispatch(loginUser(username, password));
   };
 
     return (
