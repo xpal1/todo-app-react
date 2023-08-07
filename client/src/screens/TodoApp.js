@@ -5,6 +5,7 @@ import TodoForm from "../components/TodoForm";
 import TodoFilter from "../components/TodoFilter";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchTodos, selectFilteredTodos } from "../redux/slices/todoSlice.js";
+import TodoNotFound from "../components/TodoNotFound";
 import "../components/css/style.css";
 
 function TodoApp() {
@@ -28,7 +29,7 @@ function TodoApp() {
           {todos.length > 0 ? (
             <TodoList token={token} todos={todos} />
           ) : (
-            <p>Nenašli sa žiadne ToDo položky</p>
+            <TodoNotFound />
           )}
           <TodoForm token={token} todos={todos} length={todos.length} />
         </div>
