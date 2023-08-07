@@ -1,10 +1,12 @@
-import React, { useRef, useState } from "react";
-import axios from "axios";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { addTodoAsync } from "../redux/slices/todoSlice.js";
 
-function TodoForm(props) {
+function TodoForm({ token, todos }) {
+  const dispatch = useDispatch();
+
   const [text, setText] = useState("");
   const userId = localStorage.getItem("userId");
-  const myRef = useRef(null);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -18,24 +20,9 @@ function TodoForm(props) {
       userId: userId,
     };
 
-    try {
-      const { token } = props;
-      await axios.post("http://localhost:5000/todos/", newTodo, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      props.fetchTodos();
-      setText("");
-
+      dispatch(addTodoAsync(newTodo, token));
       alert("Todo položka bola úspešne pridaná!");
-    } catch (error) {
-      if (error.response) {
-        console.log(error.response.data);
-        console.log(newTodo);
-      } else {
-        alert("Niečo sa nepodarilo!");
-        console.log(error);
-      }
-    }
+      setText("");
   };
 
   const handleChange = (event) => {
@@ -49,14 +36,13 @@ function TodoForm(props) {
           className="todo-form-input"
           type="text"
           name="text"
-          ref={myRef}
           id="text"
           value={text}
           onChange={handleChange}
           placeholder="New todo..."
         />
         <button type="submit" className="add-button">
-          Add# {props.length + 1}
+          Add# {todos.length + 1}
         </button>
       </form>
     </div>

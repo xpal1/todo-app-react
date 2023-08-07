@@ -13,10 +13,9 @@ export const loginUser = (username, password) => async (dispatch) => {
       alert("Úspešne ste sa prihlásili!");
       dispatch(setToken(response.data.token));
       dispatch(setUserId(response.data.userId));
-      // ulozenie udajov do localStorage
       localStorage.setItem("userId", response.data.userId);
       localStorage.setItem("username", username);
-      localStorage.setItem("password", password);
+      localStorage.setItem("token", response.data.token);
       navigate("/todos");
     }
   } catch (error) {
@@ -35,8 +34,7 @@ export const registerUser = (username, email, password) => async (dispatch) => {
     });
 
     if (response.data.userObject) {
-      alert("Úspešne ste sa zaregistrovali!");
-      dispatch(setToken(response.data.token));
+      alert("Úspešne ste sa zaregistrovali, choďte sa prihlásiť!");
       navigate("/prihlasenie");
     }
   } catch (error) {

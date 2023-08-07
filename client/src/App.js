@@ -11,7 +11,7 @@ import {
 } from "./redux/slices/userSlice.js";
 import "./components/css/style.css";
 
-function App(props) {
+function App() {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
 

@@ -17,7 +17,7 @@ import { registerUser } from "../redux/slices/userSlice.js";
 
 const defaultTheme = createTheme();
 
-function TodoRegisterForm(props) {
+function TodoRegisterForm() {
 
   const dispatch = useDispatch();
 

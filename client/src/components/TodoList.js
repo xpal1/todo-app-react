@@ -1,25 +1,36 @@
 import React from "react";
 import { AiOutlineClear, AiOutlineCheck } from "react-icons/ai";
+import { useDispatch } from "react-redux";
+import { hardDelete, softDelete } from "../redux/slices/todoSlice.js";
 
-function TodoList(props) {
+function TodoList({ token, todos }) {
+  const dispatch = useDispatch();
+
+  const handleHardDelete = (_id) => {
+    dispatch(hardDelete(_id, token));
+  };
+
+  const handleSoftDelete = (_id, updatedTodo) => {
+    dispatch(softDelete(_id, { ...updatedTodo }, token));
+    console.log(updatedTodo);
+  };
+
   return (
     <div>
       <ul className="todo-list">
-        {props.todos.length > 0 &&
-          props.todos.map((todo, index) => (
-            <li className={todo.class} key={index}>
+        {todos.length > 0 &&
+          todos.map((todo, index) => (
+            <li key={index}>
               {todo.text}
               <button
                 className="delete"
-                onClick={() => props.hardDelete(todo._id)}
+                onClick={() => handleHardDelete(todo._id)}
               >
                 <AiOutlineClear />
               </button>
               <button
                 className="soft"
-                onClick={() =>
-                  props.softDelete(todo._id, { completed: true })
-                }
+                onClick={() => handleSoftDelete(todo._id, { completed: true })}
               >
                 <AiOutlineCheck />
               </button>
