@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { navigate } from "@reach/router";
 import axios from "axios";
 
-export const loginUser = (username, password) => async (dispatch) => {
+export const loginUser = (username, password, successCallback, errorCallback) => async (dispatch) => {
   try {
     const response = await axios.post("http://localhost:5000/user/login", {
       username,
@@ -10,22 +10,22 @@ export const loginUser = (username, password) => async (dispatch) => {
     });
 
     if (response.data.userId) {
-      alert("Úspešne ste sa prihlásili!");
       dispatch(setToken(response.data.token));
       dispatch(setUserId(response.data.userId));
       localStorage.setItem("userId", response.data.userId);
       localStorage.setItem("username", username);
       localStorage.setItem("token", response.data.token);
       navigate("/todos");
+      successCallback();
     }
   } catch (error) {
-    alert("Zadali ste nesprávne údaje!");
     dispatch(setLoginError(true));
     navigate("/registracia");
+    errorCallback();
   }
 };
 
-export const registerUser = (username, email, password) => async (dispatch) => {
+export const registerUser = (username, email, password, successCallback, errorCallback) => async (dispatch) => {
   try {
     const response = await axios.post("http://localhost:5000/user/register", {
       username,
@@ -34,13 +34,13 @@ export const registerUser = (username, email, password) => async (dispatch) => {
     });
 
     if (response.data.userObject) {
-      alert("Úspešne ste sa zaregistrovali, choďte sa prihlásiť!");
       navigate("/prihlasenie");
+      successCallback();
     }
   } catch (error) {
-    alert("Už ste zaregistrovaní, choďte sa prihlásiť!");
     dispatch(setRegisterError(true));
     navigate("/prihlasenie");
+    errorCallback();
   }
 };
 

@@ -6,7 +6,6 @@ import TodoFilter from "../components/TodoFilter";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchTodos, selectFilteredTodos } from "../redux/slices/todoSlice.js";
 import TodoNotFound from "../components/TodoNotFound";
-import { ToastProvider } from "react-toast-notifications";
 import "../components/css/style.css";
 
 function TodoApp() {
@@ -23,7 +22,6 @@ function TodoApp() {
   return (
     <div>
       <TodoNavbar />
-      <ToastProvider>
         <h3 className="animate-character h3-nadpis"> ToDo 's</h3>
         <div className="border-box">
           <div className="button-container">
@@ -39,7 +37,6 @@ function TodoApp() {
             <TodoForm token={token} todos={todos} length={todos.length} />
           </div>
         </div>
-      </ToastProvider>
     </div>
   );
 }

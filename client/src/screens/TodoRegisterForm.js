@@ -14,11 +14,13 @@ import TodoNavbar from "../components/TodoNavbar";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { registerUser } from "../redux/slices/userSlice.js";
+import { useToasts } from "react-toast-notifications";
+import "../components/css/style.css";
 
 const defaultTheme = createTheme();
 
 function TodoRegisterForm() {
-
+  const { addToast } = useToasts();
   const dispatch = useDispatch();
 
   const [username, setUsername] = useState("");
@@ -28,19 +30,32 @@ function TodoRegisterForm() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-      username: data.get("username"),
-    });
-
     // resetovanie formulara
     setEmail("");
     setPassword("");
     setUsername("");
 
-    dispatch(registerUser(username, email, password));
+    const successCallback = () => {
+      addToast("Úspešne ste sa zaregistrovali, choďte sa prihlásiť!", {
+        appearance: "success",
+        autoDismiss: true,
+        autoDismissTimeout: 2500,
+        placement: "top-right",
+        className: "todo-toast"
+      });
+    };
+  
+    const errorCallback = () => {
+      addToast("Už ste zaregistrovaní, prihláste sa!", {
+        appearance: "error",
+        autoDismiss: true,
+        autoDismissTimeout: 2500,
+        placement: "top-right",
+        className: "todo-toast"
+      });
+    };
+
+    dispatch(registerUser(username, email, password, successCallback, errorCallback));
   };
 
   const handleUsernameChange = (event) => {

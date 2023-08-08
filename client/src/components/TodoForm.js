@@ -40,7 +40,7 @@ function TodoForm({ token, todos }) {
 
   return (
       <div>
-        <form onSubmit={handleSubmit}>
+        <form className="form-todos" onSubmit={handleSubmit}>
           <input
             className="todo-form-input"
             type="text"
