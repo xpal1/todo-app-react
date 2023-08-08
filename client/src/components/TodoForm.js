@@ -1,8 +1,11 @@
 import React, { useState } from "react";
+import { useToasts } from "react-toast-notifications";
 import { useDispatch } from "react-redux";
 import { addTodoAsync } from "../redux/slices/todoSlice.js";
+import "./css/style.css";
 
 function TodoForm({ token, todos }) {
+  const { addToast } = useToasts();
   const dispatch = useDispatch();
 
   const [text, setText] = useState("");
@@ -20,9 +23,15 @@ function TodoForm({ token, todos }) {
       userId: userId,
     };
 
-      dispatch(addTodoAsync(newTodo, token));
-      alert("Todo položka bola úspešne pridaná!");
-      setText("");
+    dispatch(addTodoAsync(newTodo, token));
+    addToast("Todo položka bola úspešne pridaná!", {
+      appearance: "success",
+      autoDismiss: true,
+      autoDismissTimeout: 2000,
+      placement: "top-right",
+      className: "todo-toast"
+    });
+    setText("");
   };
 
   const handleChange = (event) => {
@@ -30,22 +39,22 @@ function TodoForm({ token, todos }) {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <input
-          className="todo-form-input"
-          type="text"
-          name="text"
-          id="text"
-          value={text}
-          onChange={handleChange}
-          placeholder="New todo..."
-        />
-        <button type="submit" className="add-button">
-          Add# {todos.length + 1}
-        </button>
-      </form>
-    </div>
+      <div>
+        <form onSubmit={handleSubmit}>
+          <input
+            className="todo-form-input"
+            type="text"
+            name="text"
+            id="text"
+            value={text}
+            onChange={handleChange}
+            placeholder="New todo..."
+          />
+          <button type="submit" className="add-button">
+            Add# {todos.length + 1}
+          </button>
+        </form>
+      </div>
   );
 }
 

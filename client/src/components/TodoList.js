@@ -1,18 +1,34 @@
 import React from "react";
 import { AiOutlineClear, AiOutlineCheck } from "react-icons/ai";
 import { useDispatch } from "react-redux";
+import { useToasts } from "react-toast-notifications";
 import { hardDelete, softDelete } from "../redux/slices/todoSlice.js";
+import "./css/style.css";
 
 function TodoList({ token, todos }) {
+  const { addToast } = useToasts();
   const dispatch = useDispatch();
 
-  const handleHardDelete = (_id) => {
+  const handleHardDelete = async (_id) => {
     dispatch(hardDelete(_id, token));
+    addToast("Todo položka bola úspešne odstránená!", {
+      appearance: "success",
+      autoDismiss: true,
+      autoDismissTimeout: 2000,
+      placement: "top-right",
+      className: "todo-toast"
+    });
   };
 
-  const handleSoftDelete = (_id, updatedTodo) => {
+  const handleSoftDelete = async (_id, updatedTodo) => {
     dispatch(softDelete(_id, { ...updatedTodo }, token));
-    console.log(updatedTodo);
+    addToast("Todo položka bola úspešne aktualizovaná!", {
+      appearance: "success",
+      autoDismiss: true,
+      autoDismissTimeout: 2000,
+      placement: "top-right",
+      className: "todo-toast"
+    });
   };
 
   return (

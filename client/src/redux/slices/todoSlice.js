@@ -37,7 +37,6 @@ export const hardDelete = (_id, token) => async (dispatch) => {
       headers: { Authorization: `Bearer ${token}` },
     });
     dispatch(fetchTodos(token));
-    alert("Todo položka bola úspešne odstránená!");
   } catch (error) {
     if (error.response) {
       alert(error.response.data.message);
@@ -54,7 +53,6 @@ export const softDelete = (_id, updatedTodo, token) => async (dispatch) => {
       headers: { Authorization: `Bearer ${token}` },
     });
     dispatch(fetchTodos(token));
-    alert("Todo položka bola úspešne aktualizovaná!");
   } catch (error) {
     if (error.response) {
       alert(error.response.data.message);

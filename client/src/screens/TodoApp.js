@@ -6,6 +6,7 @@ import TodoFilter from "../components/TodoFilter";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchTodos, selectFilteredTodos } from "../redux/slices/todoSlice.js";
 import TodoNotFound from "../components/TodoNotFound";
+import { ToastProvider } from "react-toast-notifications";
 import "../components/css/style.css";
 
 function TodoApp() {
@@ -22,18 +23,23 @@ function TodoApp() {
   return (
     <div>
       <TodoNavbar />
-      <h3 className="animate-character h3-nadpis"> ToDo 's</h3>
-      <div className="border-box">
-        <div className="button-container">
-          <TodoFilter token={token} selectFilteredTodos={selectFilteredTodos} />
-          {todos.length > 0 ? (
-            <TodoList token={token} todos={todos} />
-          ) : (
-            <TodoNotFound />
-          )}
-          <TodoForm token={token} todos={todos} length={todos.length} />
+      <ToastProvider>
+        <h3 className="animate-character h3-nadpis"> ToDo 's</h3>
+        <div className="border-box">
+          <div className="button-container">
+            <TodoFilter
+              token={token}
+              selectFilteredTodos={selectFilteredTodos}
+            />
+            {todos.length > 0 ? (
+              <TodoList token={token} todos={todos} />
+            ) : (
+              <TodoNotFound />
+            )}
+            <TodoForm token={token} todos={todos} length={todos.length} />
+          </div>
         </div>
-      </div>
+      </ToastProvider>
     </div>
   );
 }
