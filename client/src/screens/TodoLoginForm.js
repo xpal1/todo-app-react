@@ -12,13 +12,13 @@ import TodoNavbar from "../components/TodoNavbar";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loginUser } from "../redux/slices/userSlice.js";
-import { useToasts } from "react-toast-notifications";
+// import { useToasts } from "react-toast-notifications";
 import "../components/css/style.css";
 
 const defaultTheme = createTheme();
 
 function TodoLoginForm() {
-  const { addToast } = useToasts();
+  // const { addToast } = useToasts();
   const dispatch = useDispatch();
 
   const [username, setUsername] = useState("");
@@ -40,23 +40,23 @@ function TodoLoginForm() {
     setPassword("");
 
     const successCallback = () => {
-      addToast("Úspešne ste sa prihlásili!", {
-        appearance: "success",
-        autoDismiss: true,
-        autoDismissTimeout: 2500,
-        placement: "top-right",
-        className: "todo-toast"
-      });
+      // addToast("Úspešne ste sa prihlásili!", {
+      //   appearance: "success",
+      //   autoDismiss: true,
+      //   autoDismissTimeout: 2500,
+      //   placement: "top-right",
+      //   className: "todo-toast"
+      // });
     };
   
     const errorCallback = () => {
-      addToast("Zadali ste nesprávne údaje!", {
-        appearance: "error",
-        autoDismiss: true,
-        autoDismissTimeout: 2500,
-        placement: "top-right",
-        className: "todo-toast"
-      });
+      // addToast("Zadali ste nesprávne údaje!", {
+      //   appearance: "error",
+      //   autoDismiss: true,
+      //   autoDismissTimeout: 2500,
+      //   placement: "top-right",
+      //   className: "todo-toast"
+      // });
     };
 
     dispatch(loginUser(username, password, successCallback, errorCallback));

@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { useToasts } from "react-toast-notifications";
+// import { useToasts } from "react-toast-notifications";
 import { useDispatch } from "react-redux";
 import { addTodoAsync } from "../redux/slices/todoSlice.js";
 import "./css/style.css";
 
 function TodoForm({ token, todos }) {
-  const { addToast } = useToasts();
+  // const { addToast } = useToasts();
   const dispatch = useDispatch();
 
   const [text, setText] = useState("");
@@ -24,13 +24,13 @@ function TodoForm({ token, todos }) {
     };
 
     dispatch(addTodoAsync(newTodo, token));
-    addToast("Todo položka bola úspešne pridaná!", {
-      appearance: "success",
-      autoDismiss: true,
-      autoDismissTimeout: 2000,
-      placement: "top-right",
-      className: "todo-toast"
-    });
+    // addToast("Todo položka bola úspešne pridaná!", {
+    //   appearance: "success",
+    //   autoDismiss: true,
+    //   autoDismissTimeout: 2000,
+    //   placement: "top-right",
+    //   className: "todo-toast"
+    // });
     setText("");
   };
 

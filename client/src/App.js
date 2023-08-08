@@ -10,7 +10,6 @@ import {
   setRegisterError,
 } from "./redux/slices/userSlice.js";
 import "./components/css/style.css";
-import { ToastProvider } from "react-toast-notifications";
 
 function App() {
   const dispatch = useDispatch();
@@ -43,7 +42,6 @@ function App() {
 
   return (
     <>
-      <ToastProvider>
         {!user.token && (!user.loginError || user.registerError) ? (
           <TodoLoginForm
             onLogin={handleLogin}
@@ -54,7 +52,6 @@ function App() {
         ) : (
           <TodoApp token={user.token} onLogout={handleLogout} />
         )}
-      </ToastProvider>
     </>
   );
 }

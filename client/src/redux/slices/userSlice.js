@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { navigate } from "@reach/router";
+import { navigate } from "@gatsbyjs/reach-router";
 import axios from "axios";
 
 export const loginUser = (username, password, successCallback, errorCallback) => async (dispatch) => {
