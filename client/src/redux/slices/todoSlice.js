@@ -12,7 +12,12 @@ export const fetchTodos = (token) => async (dispatch) => {
   }
 };
 
-export const addTodoAsync = (newTodo, token) => async (dispatch) => {
+export const addTodoAsync = (
+  newTodo,
+  token,
+  successCallback,
+  errorCallback
+) => async (dispatch) => {
   try {
     await axios.post("http://localhost:5000/todos/", newTodo, {
       headers: { Authorization: `Bearer ${token}` },
@@ -20,45 +25,61 @@ export const addTodoAsync = (newTodo, token) => async (dispatch) => {
 
     dispatch(addTodo(newTodo, token));
     dispatch(fetchTodos(token));
+    successCallback();
   } catch (error) {
     if (error.response) {
+      errorCallback();
       console.log(error.response.data);
-      console.log(newTodo);
     } else {
-      alert("Niečo sa nepodarilo!");
+      errorCallback();
       console.log(error);
     }
   }
 };
 
-export const hardDelete = (_id, token) => async (dispatch) => {
+export const hardDelete = (
+  _id,
+  token,
+  successCallback,
+  errorCallback
+) => async (dispatch) => {
   try {
     await axios.delete(`http://localhost:5000/todos/${_id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
+
     dispatch(fetchTodos(token));
+    successCallback();
   } catch (error) {
     if (error.response) {
-      alert(error.response.data.message);
+      errorCallback();
     } else {
-      alert("Niečo sa nepodarilo!");
       console.log(error);
+      errorCallback();
     }
   }
 };
 
-export const softDelete = (_id, updatedTodo, token) => async (dispatch) => {
+export const softDelete = (
+  _id,
+  updatedTodo,
+  token,
+  successCallback,
+  errorCallback
+) => async (dispatch) => {
   try {
     await axios.put(`http://localhost:5000/todos/${_id}`, updatedTodo, {
       headers: { Authorization: `Bearer ${token}` },
     });
+
     dispatch(fetchTodos(token));
+    successCallback();
   } catch (error) {
     if (error.response) {
-      alert(error.response.data.message);
+      errorCallback();
     } else {
-      alert("Niečo sa nepodarilo!");
       console.log(error);
+      errorCallback();
     }
   }
 };

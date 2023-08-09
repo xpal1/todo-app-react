@@ -1,34 +1,47 @@
 import React from "react";
 import { AiOutlineClear, AiOutlineCheck } from "react-icons/ai";
 import { useDispatch } from "react-redux";
-// import { useToasts } from "react-toast-notifications";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { hardDelete, softDelete } from "../redux/slices/todoSlice.js";
 import "./css/style.css";
 
 function TodoList({ token, todos }) {
-  // const { addToast } = useToasts();
   const dispatch = useDispatch();
 
+  const toastOptions = {
+    position: "bottom-right",
+    autoClose: 1200,
+    pauseOnHover: false,
+    closeOnClick: false,
+    draggable: false,
+    theme: "dark",
+  };
+
   const handleHardDelete = async (_id) => {
-    dispatch(hardDelete(_id, token));
-    // addToast("Todo položka bola úspešne odstránená!", {
-    //   appearance: "success",
-    //   autoDismiss: true,
-    //   autoDismissTimeout: 2000,
-    //   placement: "top-right",
-    //   className: "todo-toast"
-    // });
+
+    const successCallback = () => {
+      toast.success("Todo položka bola úspešne odstránená!", toastOptions);
+    };
+  
+    const errorCallback = () => {
+      toast.error("Niečo sa nepodarilo!", toastOptions);
+    };
+
+    dispatch(hardDelete(_id, token, successCallback, errorCallback));
   };
 
   const handleSoftDelete = async (_id, updatedTodo) => {
-    dispatch(softDelete(_id, { ...updatedTodo }, token));
-    // addToast("Todo položka bola úspešne aktualizovaná!", {
-    //   appearance: "success",
-    //   autoDismiss: true,
-    //   autoDismissTimeout: 2000,
-    //   placement: "top-right",
-    //   className: "todo-toast"
-    // });
+
+    const successCallback = () => {
+      toast.success("Todo položka bola úspešne aktualizovaná!", toastOptions);
+    };
+  
+    const errorCallback = () => {
+      toast.error("Niečo sa nepodarilo!", toastOptions);
+    };
+
+    dispatch(softDelete(_id, { ...updatedTodo }, token, successCallback, errorCallback));
   };
 
   return (
@@ -54,6 +67,7 @@ function TodoList({ token, todos }) {
             </li>
           ))}
       </ul>
+      <ToastContainer />
     </div>
   );
 }

@@ -1,12 +1,21 @@
 import React, { useState } from "react";
-// import { useToasts } from "react-toast-notifications";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useDispatch } from "react-redux";
 import { addTodoAsync } from "../redux/slices/todoSlice.js";
 import "./css/style.css";
 
 function TodoForm({ token, todos }) {
-  // const { addToast } = useToasts();
   const dispatch = useDispatch();
+
+  const toastOptions = {
+    position: "bottom-right",
+    autoClose: 1200,
+    pauseOnHover: false,
+    closeOnClick: false,
+    draggable: false,
+    theme: "dark",
+  };
 
   const [text, setText] = useState("");
   const userId = localStorage.getItem("userId");
@@ -23,14 +32,16 @@ function TodoForm({ token, todos }) {
       userId: userId,
     };
 
-    dispatch(addTodoAsync(newTodo, token));
-    // addToast("Todo položka bola úspešne pridaná!", {
-    //   appearance: "success",
-    //   autoDismiss: true,
-    //   autoDismissTimeout: 2000,
-    //   placement: "top-right",
-    //   className: "todo-toast"
-    // });
+    const successCallback = () => {
+      toast.success("Todo položka bola úspešne pridaná!", toastOptions);
+    };
+  
+    const errorCallback = () => {
+      toast.error("Niečo sa nepodarilo!", toastOptions);
+    };
+
+    dispatch(addTodoAsync(newTodo, token, successCallback, errorCallback));
+
     setText("");
   };
 
@@ -54,6 +65,7 @@ function TodoForm({ token, todos }) {
             Add# {todos.length + 1}
           </button>
         </form>
+        <ToastContainer />
       </div>
   );
 }
