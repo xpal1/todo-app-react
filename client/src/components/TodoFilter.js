@@ -1,4 +1,6 @@
 import React from "react";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useDispatch } from "react-redux";
 import {
   filterAll,
@@ -9,16 +11,52 @@ import {
 function TodoFilter({ token }) {
   const dispatch = useDispatch();
 
+  const toastOptions = {
+    position: "bottom-left",
+    autoClose: 2000,
+    pauseOnHover: false,
+    closeOnClick: false,
+    draggable: false,
+    theme: "dark",
+  };
+
   const handleFilterAll = () => {
-    dispatch(filterAll(token));
+
+    const successCallback = () => {
+      toast.info("Zobrazujú sa všetky Todo položky", toastOptions);
+    };
+  
+    const errorCallback = () => {
+      toast.error("Niečo sa nepodarilo!", toastOptions);
+    };
+
+    dispatch(filterAll(token, successCallback, errorCallback));
   };
 
   const handleFilterActive = () => {
-    dispatch(filterActive(token));
+
+    const successCallback = () => {
+      toast.info("Zobrazujú sa aktívne Todo položky", toastOptions);
+    };
+  
+    const errorCallback = () => {
+      toast.error("Niečo sa nepodarilo!", toastOptions);
+    };
+
+    dispatch(filterActive(token, successCallback, errorCallback));
   };
 
   const handleFilterDone = () => {
-    dispatch(filterDone(token));
+
+    const successCallback = () => {
+      toast.info("Zobrazujú sa dokončené Todo položky", toastOptions);
+    };
+  
+    const errorCallback = () => {
+      toast.error("Niečo sa nepodarilo!", toastOptions);
+    };
+
+    dispatch(filterDone(token, successCallback, errorCallback));
   };
 
   return (
@@ -32,6 +70,7 @@ function TodoFilter({ token }) {
       <button className="filter-button" onClick={handleFilterDone}>
         Dokončené
       </button>
+      <ToastContainer />
     </div>
   );
 }

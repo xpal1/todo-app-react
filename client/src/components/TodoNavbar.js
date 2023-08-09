@@ -12,6 +12,8 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import "./css/style.css";
 
 const drawerWidth = 240;
@@ -19,9 +21,21 @@ const drawerWidth = 240;
 function TodoNavbar(props) {
   const username = localStorage.getItem("username");
 
+  const toastOptions = {
+    position: "bottom-left",
+    autoClose: 1000,
+    pauseOnHover: false,
+    closeOnClick: false,
+    draggable: false,
+    theme: "dark",
+  };
+
   const logoutFunction = () => {
+    toast.warning("Odhlasujem Vás...", toastOptions);
     localStorage.clear();
-    window.location.href = "http://localhost:3000/";
+    setTimeout(() => {
+      window.location.href = "http://localhost:3000/";
+    }, 2000);
   };
 
   const redirectToLoginForm = () => {
@@ -157,6 +171,7 @@ function TodoNavbar(props) {
           </Drawer>
         </Box>
       </Box>
+      <ToastContainer />
     </div>
   );
 }

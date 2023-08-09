@@ -84,18 +84,24 @@ export const softDelete = (
   }
 };
 
-export const filterAll = (token) => async (dispatch) => {
+export const filterAll = (token, successCallback, errorCallback) => async (
+  dispatch
+) => {
   try {
     const response = await axios.get("http://localhost:5000/todos/", {
       headers: { Authorization: `Bearer ${token}` },
     });
     dispatch(setFilteredTodos(response.data));
+    successCallback();
   } catch (error) {
     console.error(error);
+    errorCallback();
   }
 };
 
-export const filterActive = (token) => async (dispatch) => {
+export const filterActive = (token, successCallback, errorCallback) => async (
+  dispatch
+) => {
   try {
     const response = await axios.get(
       "http://localhost:5000/todos?completed=false",
@@ -104,12 +110,16 @@ export const filterActive = (token) => async (dispatch) => {
       }
     );
     dispatch(setFilteredTodos(response.data));
+    successCallback();
   } catch (error) {
     console.error(error);
+    errorCallback();
   }
 };
 
-export const filterDone = (token) => async (dispatch) => {
+export const filterDone = (token, successCallback, errorCallback) => async (
+  dispatch
+) => {
   try {
     const response = await axios.get(
       "http://localhost:5000/todos?completed=true",
@@ -118,8 +128,10 @@ export const filterDone = (token) => async (dispatch) => {
       }
     );
     dispatch(setFilteredTodos(response.data));
+    successCallback();
   } catch (error) {
     console.error(error);
+    errorCallback();
   }
 };
 
