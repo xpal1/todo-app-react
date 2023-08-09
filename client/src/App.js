@@ -8,6 +8,7 @@ import {
   setToken,
   setLoginError,
   setRegisterError,
+  setRegisterSuccess,
 } from "./redux/slices/userSlice.js";
 import "./components/css/style.css";
 
@@ -35,6 +36,10 @@ function App() {
     dispatch(setRegisterError(true));
   };
 
+  const handleRegisterSuccess = () => {
+    dispatch(setRegisterSuccess(true));
+  }
+
   const handleLogout = () => {
     dispatch(setToken(null));
     localStorage.removeItem("token");
@@ -42,13 +47,13 @@ function App() {
 
   return (
     <>
-        {!user.token && (!user.loginError || user.registerError) ? (
+        {!user.token && (!user.loginError || user.registerError || user.registerSuccess) ? (
           <TodoLoginForm
             onLogin={handleLogin}
             onLoginError={handleLoginError}
           />
         ) : !user.token && user.loginError ? (
-          <TodoRegisterForm onRegisterError={handleRegisterError} />
+          <TodoRegisterForm onRegisterSuccess={handleRegisterSuccess} onRegisterError={handleRegisterError} />
         ) : (
           <TodoApp token={user.token} onLogout={handleLogout} />
         )}

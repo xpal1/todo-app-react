@@ -2,7 +2,12 @@ import { createSlice } from "@reduxjs/toolkit";
 import { navigate } from "@gatsbyjs/reach-router";
 import axios from "axios";
 
-export const loginUser = (username, password, successCallback, errorCallback) => async (dispatch) => {
+export const loginUser = (
+  username,
+  password,
+  successCallback,
+  errorCallback
+) => async (dispatch) => {
   try {
     const response = await axios.post("http://localhost:5000/user/login", {
       username,
@@ -10,22 +15,34 @@ export const loginUser = (username, password, successCallback, errorCallback) =>
     });
 
     if (response.data.userId) {
-      dispatch(setToken(response.data.token));
-      dispatch(setUserId(response.data.userId));
-      localStorage.setItem("userId", response.data.userId);
-      localStorage.setItem("username", username);
-      localStorage.setItem("token", response.data.token);
-      navigate("/todos");
+      setTimeout(() => {
+        dispatch(setToken(response.data.token));
+        dispatch(setUserId(response.data.userId));
+        localStorage.setItem("userId", response.data.userId);
+        localStorage.setItem("username", username);
+        localStorage.setItem("token", response.data.token);
+        navigate("/todos");
+      }, 2500);
+
       successCallback();
     }
   } catch (error) {
-    dispatch(setLoginError(true));
-    navigate("/registracia");
+    setTimeout(() => {
+      dispatch(setLoginError(true));
+      navigate("/registracia");
+    }, 2500);
+
     errorCallback();
   }
 };
 
-export const registerUser = (username, email, password, successCallback, errorCallback) => async (dispatch) => {
+export const registerUser = (
+  username,
+  email,
+  password,
+  successCallback,
+  errorCallback
+) => async (dispatch) => {
   try {
     const response = await axios.post("http://localhost:5000/user/register", {
       username,
@@ -34,12 +51,19 @@ export const registerUser = (username, email, password, successCallback, errorCa
     });
 
     if (response.data.userObject) {
-      navigate("/prihlasenie");
+      setTimeout(() => {
+        dispatch(setRegisterSuccess(true));
+        navigate("/prihlasenie");
+      }, 2500);
+      
       successCallback();
     }
   } catch (error) {
-    dispatch(setRegisterError(true));
-    navigate("/prihlasenie");
+    setTimeout(() => {
+      dispatch(setRegisterError(true));
+      navigate("/prihlasenie");
+    }, 2500);
+
     errorCallback();
   }
 };
@@ -51,6 +75,7 @@ export const userSlice = createSlice({
     userId: null,
     loginError: false,
     registerError: false,
+    registerSuccess: false,
   },
   reducers: {
     setToken: (state, action) => {
@@ -65,6 +90,9 @@ export const userSlice = createSlice({
     setRegisterError: (state, action) => {
       state.registerError = action.payload;
     },
+    setRegisterSuccess: (state, action) => {
+      state.registerSuccess = action.payload;
+    },
   },
 });
 
@@ -73,6 +101,7 @@ export const {
   setUserId,
   setLoginError,
   setRegisterError,
+  setRegisterSuccess,
 } = userSlice.actions;
 
 export const selectUser = (state) => state.user;

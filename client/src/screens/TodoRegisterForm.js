@@ -14,14 +14,23 @@ import TodoNavbar from "../components/TodoNavbar";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { registerUser } from "../redux/slices/userSlice.js";
-// import { useToasts } from "react-toast-notifications";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import "../components/css/style.css";
 
 const defaultTheme = createTheme();
 
 function TodoRegisterForm() {
-  // const { addToast } = useToasts();
   const dispatch = useDispatch();
+
+  const toastOptions = {
+    position: "bottom-right",
+    autoClose: 1400,
+    pauseOnHover: false,
+    closeOnClick: false,
+    draggable: false,
+    theme: "dark",
+  };
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -36,23 +45,11 @@ function TodoRegisterForm() {
     setUsername("");
 
     const successCallback = () => {
-      // addToast("Úspešne ste sa zaregistrovali, choďte sa prihlásiť!", {
-      //   appearance: "success",
-      //   autoDismiss: true,
-      //   autoDismissTimeout: 2500,
-      //   placement: "top-right",
-      //   className: "todo-toast"
-      // });
+      toast.success("Úspešne ste sa zaregistrovali, prihláste sa!", toastOptions);
     };
   
     const errorCallback = () => {
-      // addToast("Už ste zaregistrovaní, prihláste sa!", {
-      //   appearance: "error",
-      //   autoDismiss: true,
-      //   autoDismissTimeout: 2500,
-      //   placement: "top-right",
-      //   className: "todo-toast"
-      // });
+      toast.error("Už ste zaregistrovaní, prihláste sa!", toastOptions);
     };
 
     dispatch(registerUser(username, email, password, successCallback, errorCallback));
@@ -147,6 +144,7 @@ function TodoRegisterForm() {
             </Grid>
           </Box>
         </Box>
+        <ToastContainer />
       </Container>
     </ThemeProvider>
   );

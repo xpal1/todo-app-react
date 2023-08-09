@@ -9,17 +9,25 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TodoNavbar from "../components/TodoNavbar";
-import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loginUser } from "../redux/slices/userSlice.js";
-// import { useToasts } from "react-toast-notifications";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import "../components/css/style.css";
 
 const defaultTheme = createTheme();
 
 function TodoLoginForm() {
-  // const { addToast } = useToasts();
   const dispatch = useDispatch();
+
+  const toastOptions = {
+    position: "bottom-right",
+    autoClose: 1400,
+    pauseOnHover: false,
+    closeOnClick: false,
+    draggable: false,
+    theme: "dark",
+  };
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -40,23 +48,11 @@ function TodoLoginForm() {
     setPassword("");
 
     const successCallback = () => {
-      // addToast("Úspešne ste sa prihlásili!", {
-      //   appearance: "success",
-      //   autoDismiss: true,
-      //   autoDismissTimeout: 2500,
-      //   placement: "top-right",
-      //   className: "todo-toast"
-      // });
+      toast.success("Úspešne ste sa prihlásili!", toastOptions);
     };
   
     const errorCallback = () => {
-      // addToast("Zadali ste nesprávne údaje!", {
-      //   appearance: "error",
-      //   autoDismiss: true,
-      //   autoDismissTimeout: 2500,
-      //   placement: "top-right",
-      //   className: "todo-toast"
-      // });
+      toast.error("Zadali ste nesprávne údaje!", toastOptions);
     };
 
     dispatch(loginUser(username, password, successCallback, errorCallback));
@@ -117,13 +113,10 @@ function TodoLoginForm() {
               </Button>
             </Box>
           </Box>
+          <ToastContainer />
         </Container>
       </ThemeProvider>
     );
   }
 
-export default function TodoLoginFormWrapper(props) {
-  const navigate = useNavigate();
-
-  return <TodoLoginForm {...props} navigate={navigate} />;
-}
+export default TodoLoginForm;
