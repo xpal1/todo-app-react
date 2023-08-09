@@ -1,7 +1,7 @@
 import React from "react";
 import { AiOutlineClear, AiOutlineCheck } from "react-icons/ai";
 import { useDispatch } from "react-redux";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast, Zoom } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { hardDelete, softDelete } from "../redux/slices/todoSlice.js";
 import "./css/style.css";
@@ -16,6 +16,7 @@ function TodoList({ token, todos }) {
     closeOnClick: false,
     draggable: false,
     theme: "dark",
+    transition: Zoom,
   };
 
   const handleHardDelete = async (_id) => {

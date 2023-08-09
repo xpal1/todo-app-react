@@ -396,3 +396,28 @@ input.todo-form-input[type=text]:focus {
     user-select: none;
     margin-top: 4rem;
 }
+
+.welcome-toast {
+    color: #1069ed !important;
+    font-weight: 500;
+    border-radius: 10px !important;
+    background: whitesmoke !important;
+    border: none !important;
+    box-shadow: 0px 0px 3px rgba(219, 219, 219, 0.5) !important;
+    margin-top: -0.85rem !important;
+    min-height: 30% !important;
+}
+
+@media screen and (max-width: 768px) {
+    .welcome-toast {
+        font-weight: 500;
+        font-size: small;
+        margin-top: 0.2rem !important;
+        position: fixed;
+        bottom: 0;
+        left: 71%;
+        transform: translateY(107%);
+        margin: 0;
+        padding: 0.5rem;
+    }
+}

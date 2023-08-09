@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast, Zoom } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useDispatch } from "react-redux";
 import { addTodoAsync } from "../redux/slices/todoSlice.js";
@@ -15,6 +15,7 @@ function TodoForm({ token, todos }) {
     closeOnClick: false,
     draggable: false,
     theme: "dark",
+    transition: Zoom,
   };
 
   const [text, setText] = useState("");

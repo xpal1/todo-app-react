@@ -118,13 +118,6 @@ function TodoNavbar(props) {
             >
               <MenuIcon />
             </IconButton>
-            <Typography
-              variant="h6"
-              component="div"
-              sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
-            >
-              {username}
-            </Typography>
             <Box sx={{ display: { xs: "none", sm: "block" } }}>
               <Button
                 className="logout-btn"
