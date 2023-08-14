@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { Route, Routes } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import TodoApp from "./screens/TodoApp";
 import TodoLoginForm from "./screens/TodoLoginForm";
@@ -38,7 +39,7 @@ function App() {
 
   const handleRegisterSuccess = () => {
     dispatch(setRegisterSuccess(true));
-  }
+  };
 
   const handleLogout = () => {
     dispatch(setToken(null));
@@ -47,16 +48,38 @@ function App() {
 
   return (
     <>
-        {!user.token && (!user.loginError || user.registerError || user.registerSuccess) ? (
-          <TodoLoginForm
-            onLogin={handleLogin}
-            onLoginError={handleLoginError}
+      <Routes>
+        {!user.token &&
+        (!user.loginError || user.registerError || user.registerSuccess) ? (
+          <Route
+            exact
+            path="/*"
+            element={
+              <TodoLoginForm
+                onLogin={handleLogin}
+                onLoginError={handleLoginError}
+              />
+            }
           />
         ) : !user.token && user.loginError ? (
-          <TodoRegisterForm onRegisterSuccess={handleRegisterSuccess} onRegisterError={handleRegisterError} />
+          <Route
+            exact
+            path="/*"
+            element={
+              <TodoRegisterForm
+                onRegisterSuccess={handleRegisterSuccess}
+                onRegisterError={handleRegisterError}
+              />
+            }
+          />
         ) : (
-          <TodoApp token={user.token} onLogout={handleLogout} />
+          <Route
+            exact
+            path="/*"
+            element={<TodoApp token={user.token} onLogout={handleLogout} />}
+          />
         )}
+      </Routes>
     </>
   );
 }

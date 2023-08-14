@@ -404,7 +404,7 @@ input.todo-form-input[type=text]:focus {
     background: whitesmoke !important;
     border: none !important;
     box-shadow: 0px 0px 3px rgba(219, 219, 219, 0.5) !important;
-    margin-top: -0.85rem !important;
+    margin-top: -2.75rem !important;
     min-height: 30% !important;
 }
 
@@ -418,6 +418,19 @@ input.todo-form-input[type=text]:focus {
         left: 71%;
         transform: translateY(107%);
         margin: 0;
+        padding: 0.5rem;
+    }
+}
+
+@media screen and (min-width: 800px) and (max-width: 1080px) {
+    .welcome-toast {
+        font-weight: 600;
+        font-size: normal;
+        margin-bottom: 0.85rem !important;
+        position: fixed;
+        bottom: 0;
+        right: -70%;
+        transform: translateY(92.5%);
         padding: 0.5rem;
     }
 }

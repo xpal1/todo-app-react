@@ -1,12 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import TodoNavbar from "../components/TodoNavbar";
 import TodoList from "../components/TodoList";
 import TodoForm from "../components/TodoForm";
 import TodoFilter from "../components/TodoFilter";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchTodos, selectFilteredTodos } from "../redux/slices/todoSlice.js";
+import { fetchTodos, selectFilteredTodos, setToastShown } from "../redux/slices/todoSlice.js";
 import TodoNotFound from "../components/TodoNotFound";
-import { ToastContainer, toast, Zoom } from "react-toastify";
+import { ToastContainer, toast, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../components/css/style.css";
 
@@ -15,6 +15,7 @@ function TodoApp() {
   const token = useSelector((state) => state.user.token);
   const todos = useSelector(selectFilteredTodos);
   const username = localStorage.getItem("username");
+  const isToastShown = useSelector((state) => state.todo.isToastShown);
 
   const toastOptions = {
     position: "top-center",
@@ -24,7 +25,7 @@ function TodoApp() {
     draggable: false,
     theme: "colored",
     hideProgressBar: true,
-    transition: Zoom,
+    transition: Slide,
     className: "welcome-toast",
     closeButton: false
   };
@@ -36,9 +37,10 @@ function TodoApp() {
   }, [dispatch, token]);
 
   useEffect(() => {
-    if (token) {
+    if (!isToastShown) {
       setTimeout(() => {
         toast("Vitajte, " + username + "!", toastOptions);
+        dispatch(setToastShown(true));
       }, 1000);
     }
   }, []);

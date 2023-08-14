@@ -148,13 +148,16 @@ export const todoSlice = createSlice({
     setFilteredTodos: (state, action) => {
       state.filteredTodos = action.payload;
     },
+    setToastShown: (state, action) => {
+      state.toastShown = action.payload;
+    },
     addTodo: (state, action) => {
       state.todos.push(action.payload);
     },
   },
 });
 
-export const { setTodos, setFilteredTodos, addTodo } = todoSlice.actions;
+export const { setTodos, setFilteredTodos, setToastShown, addTodo } = todoSlice.actions;
 
 export const selectFilteredTodos = (state) => state.todo.filteredTodos;
 
